@@ -138,6 +138,10 @@ const material = new THREE.ShaderMaterial({
   }
 });
 
+// ── Application Load State ─────────────────────
+let resolveModelLoad;
+const modelLoadedPromise = new Promise(resolve => resolveModelLoad = resolve);
+
 // ── Load GLTF Icosphere ────────────────────────
 const gltfLoader = new GLTFLoader();
 
@@ -232,42 +236,19 @@ gltfLoader.load(
       duration: 0.25
     }, 0.75);
     
-    // Position keyframes per state:
-    // STATE 0 (0%–25%): Start centered, drift slightly left
+    // Position continuous path (reverted from 4-state keyframes)
     scrollTl.to(sphere.position, {
-      x: -4.0,      // Push left
-      y: -0.5,
-      z: -2.0,      // Pull back (further from camera = smaller)
+      y: -3.0,
+      z: -2.0,      // Pulls slightly back and down globally
       ease: "none",
-      duration: 0.25 // 0%–25%
+      duration: 1   // 0%–100%
     }, 0);
 
-    // STATE 1 (25%–50%): Continue left & distant
-    scrollTl.to(sphere.position, {
-      x: -3.5,
-      y: -1.0,
-      z: -1.5,
-      ease: "none",
-      duration: 0.25 // 25%–50%
-    }, 0.25);
-
-    // STATE 2 (50%–75%): Swing right, come closer under the right-aligned title
-    scrollTl.to(sphere.position, {
-      x: 3.5,       // Move to the right
-      y: -1.5,
-      z: 0.5,       // Come closer to camera
-      ease: "power1.inOut",
-      duration: 0.25 // 50%–75%
-    }, 0.50);
-
-    // STATE 3 (75%–100%): Return toward center for the CTA
-    scrollTl.to(sphere.position, {
-      x: 0.0,
-      y: -1.0,
-      z: 0.0,
-      ease: "power1.inOut",
-      duration: 0.25 // 75%–100%
-    }, 0.75);
+    // Precompile heavy shaders to prevent first-render stutter
+    renderer.compile(scene, camera);
+    
+    // Announce the engine is ready
+    resolveModelLoad();
   },
   // Progress
   (progress) => {
@@ -287,11 +268,14 @@ barba.init({
   transitions: [{
     name: 'default-transition',
     once(data) {
-      // Initial load animation (scroll back up)
-      gsap.to('.loader-overlay', {
-        yPercent: -100,
-        duration: 1.2,
-        ease: 'power3.inOut'
+      // Wait for the full 3D asset, EdgesGeometry extraction, and Shader compilation
+      // before attempting to animate with GSAP. This eliminates the brutal mobile lag.
+      return modelLoadedPromise.then(() => {
+        return gsap.to('.loader-overlay', {
+          yPercent: -100,
+          duration: 1.2,
+          ease: 'power3.inOut'
+        });
       });
     },
     leave(data) {

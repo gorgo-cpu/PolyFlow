@@ -362,25 +362,47 @@ html.lenis body {
     gap: 2rem;
   }
 
-  /* All direct children should be centered with full width */
-  .section>* {
+  /* Force the glass lens to act as a pure stacking column on mobile, ignoring the desktop grid completely */
+  .glass-lens, .section {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 1.5rem !important;
+  }
+
+  /* All direct children MUST be centered and strictly single column */
+  .section > *, .glass-lens > * {
     text-align: center !important;
-    width: 100%;
+    width: 100% !important;
     margin: 0 !important;
-    /* Let the flex gap handle spacing */
+    grid-column: 1 / -1 !important; /* Strip grid bleed */
+    align-self: center !important; /* Strip grid bleed */
   }
 
   .glass-lens {
+    position: relative;
     width: 92% !important;
-    padding: 3rem 1.5rem !important; /* Tighter internal padding for tiny phone screens */
+    padding: 3rem 1.5rem 4rem !important; /* Tighter padding for tiny phone screens */
+    margin-top: 4rem !important; /* Space for the floating tag */
+  }
+
+  /* Extract the label to perfectly float above and clear the glass card on mobile */
+  .section .section-label {
+    position: absolute !important;
+    top: -3.5rem !important; /* Move higher up to clear any line wraps */
+    left: 0 !important;
+    width: 100% !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    letter-spacing: 0.1em !important;
   }
 
   /* Specific mobile overrides */
-  .state-void h1,
-  .state-architecture h2,
-  .state-bridge h2,
-  .state-summons .summons-headline {
-    font-size: clamp(3rem, 12vw, 4rem) !important;
+  .section h1, .section h2, .section h3 {
+    text-align: center !important;
+    font-size: clamp(2rem, 9vw, 3.2rem) !important;
     line-height: 1.05 !important;
     /* Give massive text more breathing room between lines */
   }
