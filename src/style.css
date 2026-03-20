@@ -1,0 +1,320 @@
+/* ───────────────────────────────────────────
+   POLYFLOWS — Base Styles
+   ─────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  /* Removed overflow: hidden to allow native scroll for Lenis */
+  background: #0A0A0A;
+  color: #0A0A0A;
+  font-family: 'Outfit', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Lenis recommended CSS */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+#webgl-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  z-index: 0; /* Changed from -1 so it sits above the body background */
+  pointer-events: auto; /* Allow orbit controls to work if no UI obstructs*/
+}
+
+.page-wrapper {
+  position: relative;
+  z-index: 1;
+  pointer-events: none; /* Let clicks pass through to canvas when clicking empty space */
+}
+
+/* UI Sections & Grid */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 2vw;
+  width: 100%;
+  padding: 0 4vw;
+}
+
+.section {
+  min-height: 100vh;
+  display: grid;
+  align-items: center;
+  align-content: center;
+  padding-top: 6vh;
+  padding-bottom: 6vh;
+  pointer-events: auto; /* Re-enable clicks for UI text */
+}
+
+/* Typography Utilities */
+.huge-text {
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.caption {
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.italic-accent {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.content-text {
+  font-size: clamp(1.2rem, 2vw, 2rem);
+  line-height: 1.4;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* ── Section Labels ── */
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.3;
+}
+
+.utility-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.4;
+}
+
+/* ── Italic Sub-headings ── */
+.italic-sub {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2vw, 1.8rem);
+  letter-spacing: -0.02em;
+  opacity: 0.7;
+  line-height: 1.3;
+}
+
+/* ── Technical Poetry Block ── */
+.tech-poetry {
+  font-size: clamp(1rem, 1.5vw, 1.4rem);
+  line-height: 1.8;
+  font-weight: 500;
+  max-width: 48ch;
+}
+
+.tech-poetry p {
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   STATE 0 — THE STATIC VOID
+   ═══════════════════════════════════════════════ */
+.state-void .utility-top-right {
+  grid-column: 10 / 13;
+  grid-row: 1;
+  align-self: start;
+  text-align: right;
+  padding-top: 3vh;
+}
+
+.state-void h1 {
+  grid-column: 1 / 11;
+  grid-row: 1;
+  align-self: center;
+}
+
+.state-void .italic-sub {
+  grid-column: 1 / 8;
+  grid-row: 2;
+  align-self: start;
+}
+
+.state-void .caption-right {
+  grid-column: 10 / 13;
+  grid-row: 2;
+  align-self: start;
+  text-align: right;
+  padding-top: 1rem;
+}
+
+/* ═══════════════════════════════════════════════
+   STATE 1 — THE ACT OF ARCHITECTURE
+   ═══════════════════════════════════════════════ */
+.state-architecture .section-label {
+  grid-column: 1 / 4;
+  grid-row: 1;
+  align-self: start;
+  padding-top: 8vh;
+}
+
+.state-architecture h2 {
+  grid-column: 1 / 13;
+  grid-row: 1;
+  align-self: center;
+  text-align: center;
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.state-architecture .italic-response {
+  grid-column: 1 / 13;
+  grid-row: 2;
+  align-self: start;
+  text-align: center;
+}
+
+.state-architecture .tech-poetry {
+  grid-column: 1 / 13;
+  grid-row: 3;
+  align-self: start;
+  justify-self: center;
+  text-align: center;
+  padding-top: 2rem;
+}
+
+/* ═══════════════════════════════════════════════
+   STATE 2 — THE BRIDGE
+   ═══════════════════════════════════════════════ */
+.state-bridge .section-label {
+  grid-column: 1 / 4;
+  grid-row: 1;
+  align-self: start;
+  padding-top: 8vh;
+}
+
+.state-bridge h2 {
+  grid-column: 1 / 13;
+  grid-row: 1;
+  align-self: center;
+  text-align: right;
+  font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.state-bridge .italic-continuation {
+  grid-column: 3 / 13;
+  grid-row: 2;
+  align-self: start;
+}
+
+.state-bridge .tech-poetry {
+  grid-column: 5 / 11;
+  grid-row: 3;
+  align-self: start;
+  padding-top: 2rem;
+}
+
+/* ═══════════════════════════════════════════════
+   STATE 3 — THE SUMMONS
+   ═══════════════════════════════════════════════ */
+.state-summons .section-label {
+  grid-column: 1 / 4;
+  grid-row: 1;
+  align-self: start;
+  padding-top: 8vh;
+}
+
+.state-summons .summons-headline {
+  grid-column: 1 / 13;
+  grid-row: 1;
+  align-self: center;
+  text-align: center;
+  font-size: clamp(2.5rem, 6vw, 6.5rem);
+  letter-spacing: -0.05em;
+}
+
+.state-summons .summons-invitation {
+  grid-column: 4 / 10;
+  grid-row: 2;
+  align-self: start;
+  text-align: center;
+  font-size: clamp(1.2rem, 2vw, 2rem);
+}
+
+.cta-button {
+  grid-column: 4 / 10;
+  grid-row: 3;
+  justify-self: center;
+  align-self: start;
+  display: inline-block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #E8E4E0;
+  border: 1px solid rgba(232, 228, 224, 0.4);
+  padding: 1.2em 3em;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  margin-top: 2rem;
+}
+
+.cta-button:hover {
+  background-color: #E8E4E0;
+  color: #0A0A0A;
+  border-color: #E8E4E0;
+}
+
+.footer-stamp {
+  grid-column: 1 / 13;
+  grid-row: 4;
+  text-align: center;
+  margin-top: 8rem;
+  padding-bottom: 4rem;
+}
+
+/* ── Text Reveal Animation ── */
+.line-wrapper {
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: top;
+}
+.line-inner {
+  display: inline-block;
+  transform: translateY(110%);
+  will-change: transform;
+}
+

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POLYFLOW — The Web Is No Longer Flat</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Playfair+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Inline critical CSS to completely hide raw HTML before JS loads */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0A0A0A;
+            /* Burgundy */
+            z-index: 9999;
+        }
+    </style>
+</head>
+
+<body data-barba="wrapper">
+    <!-- Loader Overlay -->
+    <div class="loader-overlay"></div>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- UI Layer -->
+    <div class="page-wrapper" data-barba="container" data-barba-namespace="home">
+
+        <!-- ═══ STATE 0 — THE STATIC VOID ═══ -->
+        <section class="section state-void grid-container">
+            <span class="split-target utility-label utility-top-right">EST. BUCHAREST</span>
+            <h1 class="split-target huge-text">THE WEB<br>IS FLAT.</h1>
+            <p class="split-target italic-sub">And Romania is still building in two dimensions.</p>
+            <p class="split-target caption caption-right">[ SCROLL TO ENTER THE THIRD ]</p>
+        </section>
+
+        <!-- ═══ STATE 1 — THE ACT OF ARCHITECTURE ═══ -->
+        <section class="section state-architecture grid-container">
+            <span class="split-target section-label">001 — THE ARCHITECTURE</span>
+            <h2 class="split-target huge-text">THEY TOLD YOU<br>3D WAS SLOW.</h2>
+            <p class="split-target italic-sub italic-response">We engineered it to be weightless.</p>
+            <div class="split-target tech-poetry content-text">
+                <p>Custom GLSL shaders.</p>
+                <p>Three.js at 60 frames per second.</p>
+                <p>WebGPU-ready render pipelines.</p>
+                <br>
+                <p>Latency measured in fractions</p>
+                <p>your clients will never feel.</p>
+                <br>
+                <p>We don't hide the math.</p>
+                <p>We make it beautiful.</p>
+            </div>
+        </section>
+
+        <!-- ═══ STATE 2 — THE BRIDGE ═══ -->
+        <section class="section state-bridge grid-container">
+            <span class="split-target section-label">002 — THE BRIDGE</span>
+            <h2 class="split-target huge-text">WE DON'T SELL<br>PIXELS.</h2>
+            <p class="split-target italic-sub italic-continuation">We sell the silence after someone stops scrolling.
+            </p>
+            <div class="split-target tech-poetry content-text">
+                <p>Elevated dwell time.</p>
+                <p>Deeper conversion paths.</p>
+                <p>A market position that no WordPress theme</p>
+                <p>will ever reach.</p>
+                <br>
+                <p>An Aston Martin doesn't explain its engine</p>
+                <p>at the traffic light.</p>
+                <p>It simply arrives.</p>
+                <br>
+                <p>Your brand deserves that weight.</p>
+            </div>
+        </section>
+
+        <!-- ═══ STATE 3 — THE SUMMONS ═══ -->
+        <section class="section state-summons grid-container">
+            <span class="split-target section-label">003 — THE SUMMONS</span>
+            <h3 class="split-target huge-text summons-headline">LET'S BUILD<br>SOMETHING<br>WITH MASS.</h3>
+            <p class="split-target italic-sub summons-invitation">No pitch deck. No proposal template.<br>A conversation
+                over good coffee,<br>where your vision meets our architecture.</p>
+            <a href="#" class="cta-button split-target">[ REQUEST THE BLUEPRINTS ]</a>
+            <p class="split-target caption footer-stamp">POLYFLOW — BUCHAREST — MMXXVI</p>
+        </section>
+
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
