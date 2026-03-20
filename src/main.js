@@ -188,7 +188,10 @@ gltfLoader.load(
 
     console.log('✅ Wireframe overlay applied');
 
-    scene.add(sphere);
+    // ── Pivot Group: Separates scroll logic from endless tick logic ──
+    const spherePivot = new THREE.Group();
+    spherePivot.add(sphere);
+    scene.add(spherePivot);
     console.log('✅ POLY_SPHERE loaded —', sphere.children.length, 'children');
 
     // Link object rotation and position to scroll position using ScrollTrigger
@@ -201,8 +204,14 @@ gltfLoader.load(
       }
     });
     
-    // Rotation is now handled continuously in the tick() loop, 
-    // freeing it from being strictly tied to scroll progress.
+    // Scroll-driven rotation applied to the PIVOT group 
+    // (the inner sphere constantly spins via tick() independently)
+    scrollTl.to(spherePivot.rotation, {
+      y: Math.PI * 4,
+      x: Math.PI * 0.5,
+      ease: "none",
+      duration: 1 // Span the full scroll range
+    }, 0);
 
     // ── Wireframe Opacity — reveal the math as user scrolls ──
     // STATE 0 (0%–25%): Barely visible — just a hint
@@ -233,8 +242,8 @@ gltfLoader.load(
       duration: 0.25
     }, 0.75);
     
-    // Position continuous path (reverted from 4-state keyframes)
-    scrollTl.to(sphere.position, {
+    // Position continuous path (applied to pivot group)
+    scrollTl.to(spherePivot.position, {
       y: -3.0,
       z: -2.0,      // Pulls slightly back and down globally
       ease: "none",
