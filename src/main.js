@@ -141,6 +141,7 @@ const material = new THREE.ShaderMaterial({
 // ── Application Load State ─────────────────────
 let resolveModelLoad;
 const modelLoadedPromise = new Promise(resolve => resolveModelLoad = resolve);
+let mainSphere = null; // Global reference for continuous rotation
 
 // ── Load GLTF Icosphere ────────────────────────
 const gltfLoader = new GLTFLoader();
@@ -150,6 +151,7 @@ gltfLoader.load(
   // Success
   (gltf) => {
     const sphere = gltf.scene;
+    mainSphere = sphere; // Store globally for the tick loop
 
     // Apply holographic shader to every mesh in the GLTF
     sphere.traverse((child) => {
@@ -199,13 +201,8 @@ gltfLoader.load(
       }
     });
     
-    // Rotation — continuous throughout scroll
-    scrollTl.to(sphere.rotation, {
-      y: Math.PI * 4,
-      x: Math.PI * 0.5,
-      ease: "none",
-      duration: 1 // Span the full scroll range
-    }, 0);
+    // Rotation is now handled continuously in the tick() loop, 
+    // freeing it from being strictly tied to scroll progress.
 
     // ── Wireframe Opacity — reveal the math as user scrolls ──
     // STATE 0 (0%–25%): Barely visible — just a hint
@@ -336,11 +333,16 @@ const tick = () => {
   // Update shader time uniform
   material.uniforms.uTime.value = elapsedTime;
 
+  // Constant slow rotation independent of scrolling
+  if (mainSphere) {
+    mainSphere.rotation.y += 0.0015;
+    mainSphere.rotation.x += 0.0005;
+  }
+
   // Update controls
   controls.update();
 
   // Render via Composer
-  // renderer.render(scene, camera);
   composer.render();
 
   window.requestAnimationFrame(tick);

@@ -383,14 +383,14 @@ html.lenis body {
   .glass-lens {
     position: relative;
     width: 92% !important;
-    padding: 3rem 1.5rem 4rem !important; /* Tighter padding for tiny phone screens */
-    margin-top: 4rem !important; /* Space for the floating tag */
+    padding: 3.5rem 1.5rem 4rem !important; /* Slightly more top padding inside the card */
+    margin-top: 5rem !important; /* Extra space for the higher floating tag */
   }
 
   /* Extract the label to perfectly float above and clear the glass card on mobile */
   .section .section-label {
     position: absolute !important;
-    top: -3.5rem !important; /* Move higher up to clear any line wraps */
+    top: -4.5rem !important; /* Float higher above the card */
     left: 0 !important;
     width: 100% !important;
     text-align: center !important;
