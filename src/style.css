@@ -106,7 +106,7 @@ html.lenis, html.lenis body {
 
 /* ── Section Labels ── */
 .section-label {
-  font-size: 0.7rem;
+  font-size: 1.4rem;
   letter-spacing: 0.25em;
   font-weight: 700;
   text-transform: uppercase;
@@ -126,7 +126,7 @@ html.lenis, html.lenis body {
   font-family: 'Playfair Display', serif;
   font-style: italic;
   font-weight: 700;
-  font-size: clamp(1.1rem, 2vw, 1.8rem);
+  font-size: clamp(1.4rem, 2.5vw, 2.4rem);
   letter-spacing: -0.02em;
   opacity: 0.7;
   line-height: 1.3;
@@ -316,5 +316,73 @@ html.lenis, html.lenis body {
   display: inline-block;
   transform: translateY(110%);
   will-change: transform;
+}
+
+/* ═══════════════════════════════════════════════
+   MOBILE RESPONSIVENESS (Max Width: 768px)
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .section {
+    padding-top: 15vh;
+    padding-bottom: 5vh;
+  }
+  
+  /* Reset all typography layout to full width center */
+  .state-void h1, 
+  .state-void .italic-sub, 
+  .state-void .caption-right, 
+  .state-void .utility-top-right,
+  .state-architecture h2, 
+  .state-architecture .italic-response, 
+  .state-architecture .tech-poetry,
+  .state-bridge h2, 
+  .state-bridge .italic-continuation, 
+  .state-bridge .tech-poetry,
+  .state-summons .summons-headline, 
+  .state-summons .summons-invitation {
+    grid-column: 1 / 13 !important;
+    text-align: center !important;
+    justify-self: center !important;
+    align-self: center !important;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Specific mobile overrides */
+  .state-void .utility-top-right {
+    margin-bottom: 2rem;
+  }
+  
+  .state-void h1,
+  .state-architecture h2,
+  .state-bridge h2,
+  .state-summons .summons-headline {
+    font-size: clamp(3rem, 12vw, 4rem) !important;
+    margin-bottom: 1rem;
+  }
+
+  .italic-sub {
+    font-size: clamp(1.5rem, 6vw, 2.2rem) !important;
+    margin-bottom: 2rem;
+  }
+
+  .tech-poetry {
+    padding-top: 0 !important;
+  }
+  
+  /* Adjust Button Size for Touch */
+  .cta-button {
+    grid-column: 1 / 13 !important;
+    justify-self: center !important;
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  /* Footer stamp on mobile */
+  .footer-stamp {
+    font-size: 0.6rem;
+    margin-top: 4rem;
+  }
 }
 
