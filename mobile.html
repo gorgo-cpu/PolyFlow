@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>POLYFLOW — Mobile Realm</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Playfair+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* 1. RESET & CORE LUXURY STYLING */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            background-color: #0A0A0A;
+            color: #E8E4E0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        #webgl-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            /* Behind everything */
+            pointer-events: none;
+        }
+
+        /* 2. LOADER (Carbon Copy) */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0A0A0A;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader-signature {
+            width: 250px;
+            margin-bottom: 2rem;
+        }
+
+        .signature-path {
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 1.5;
+        }
+
+        /* 3. MOBILE OVERLAY STYLING (The CSS you provided + Fixes) */
+        .page-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10vh 5% 5vh;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .glass-lens {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            /* Lowered for Mobile Performance */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 1.5rem;
+            width: 90%;
+            border-radius: 4px;
+        }
+
+        .huge-text {
+            font-size: clamp(2.5rem, 10vw, 4rem);
+            line-height: 1.1;
+            margin: 1rem 0;
+        }
+
+        .italic-sub {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .content-text p {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.7;
+            margin: 0.5rem 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            border: 1px solid #E8E4E0;
+            color: #E8E4E0;
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loader -->
+    <div class="loader-overlay" id="loader">
+        <svg class="loader-signature" viewBox="0 0 350 80">
+            <path class="signature-path"
+                d="M 30,50 C 30,50 25,20 40,20 C 55,20 60,40 50,55 M 65,40 C 60,60 85,60 85,40 M 100,20 C 100,20 95,60 95,60 M 115,40 C 115,60 135,60 135,40 C 135,40 120,80 110,80 M 155,20 C 145,20 145,60 145,60 M 170,20 C 170,20 165,60 165,60 M 185,40 C 180,60 205,60 205,40 M 220,40 C 220,60 240,60 240,40 C 240,40 255,40 260,60" />
+        </svg>
+    </div>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <div class="page-wrapper">
+        <!-- 01 — VISION -->
+        <section class="section">
+            <div class="glass-lens">
+                <span class="section-label">01 — BEYOND THE SURFACE</span>
+                <h2 class="huge-text">BEYOND THE SURFACE.</h2>
+                <p class="italic-sub">Where standard browsing ends and immersion begins.</p>
+                <div class="content-text">
+                    <p>Most of the web is built on flat foundations.</p>
+                    <p>We architect digital depth to turn passive visitors into active participants.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 02 — ENGINE -->
+        <section class="section">
+            <div class="glass-lens">
+                <span class="section-label">02 — THE PRECISION ENGINE</span>
+                <h2 class="huge-text">THE PRECISION ENGINE.</h2>
+                <p class="italic-sub">Engineered for high-performance narrative.</p>
+                <div class="content-text">
+                    <p>60FPS experiences that load faster than traditional 2D layouts.</p>
+                    <p>No lag. No friction.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 — RESULT -->
+        <section class="section">
+            <div class="glass-lens">
+                <span class="section-label">03 — ARCHITECTING CONVERSION</span>
+                <h2 class="huge-text">ARCHITECTING CONVERSION.</h2>
+                <p class="italic-sub">Elevated dwell time. Lasting prestige.</p>
+                <a href="#" class="cta-button">[ REQUEST THE BLUEPRINTS ]</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- 4. MOBILE ENGINE SCRIPT -->
+    <script type="module">
+        import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
+        import Lenis from 'https://cdn.skypack.dev/@studio-freight/lenis';
+
+        // --- RENDERER SETTINGS (The iPhone 14 Pro Fix) ---
+        const canvas = document.querySelector('#webgl-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+
+        // CRITICAL: Capping Pixel Ratio to 2.0 to prevent black screen overflow
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        // CAMERA IS STATIONARY
+        camera.position.z = 5;
+
+        // --- OBJECTS ---
+        const geometry = new THREE.IcosahedronGeometry(2, 2);
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, transparent: true });
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+
+        // --- SCROLL LOGIC ---
+        const lenis = new Lenis();
+        let scrollProgress = 0;
+
+        function animate(time) {
+            lenis.raf(time);
+            scrollProgress = lenis.progress; // 0 to 1
+
+            // 1. Stationary Sphere Spins
+            sphere.rotation.y += 0.005;
+
+            // 2. Fly-Through Effect (Entrance)
+            if (scrollProgress < 0.2) {
+                const scale = 1 + (scrollProgress * 50); // Scale up rapidly
+                sphere.scale.set(scale, scale, scale);
+                sphere.material.opacity = 1 - (scrollProgress * 5);
+            } else {
+                sphere.material.opacity = 0;
+            }
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        // --- LOADER REMOVAL ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+                requestAnimationFrame(animate);
+            }, 1000);
+        });
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+
+</html>
