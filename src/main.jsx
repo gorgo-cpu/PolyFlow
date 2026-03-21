@@ -58,14 +58,17 @@ window.addEventListener('resize', () => {
   camera.aspect = sizes.width / sizes.height;
   camera.updateProjectionMatrix();
 
+  // Crucial iOS Fix: Dynamically protect the pixel ratio during Safari URL bar shifts
+  const targetPixelRatio = window.innerWidth <= 768 ? 1 : Math.min(window.devicePixelRatio, 2);
+  
   renderer.setSize(sizes.width, sizes.height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(targetPixelRatio);
 
   css3dRenderer.setSize(sizes.width, sizes.height);
 
   // Update composer on resize
   composer.setSize(sizes.width, sizes.height);
-  composer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  composer.setPixelRatio(targetPixelRatio);
 });
 
 // ── Camera ─────────────────────────────────────
@@ -79,10 +82,17 @@ camera.position.set(0, 0, 14); // Start centered to fly exactly through the port
 scene.add(camera);
 
 // ── Controls ───────────────────────────────────
-const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = false; // Disabled so glide momentum doesn't fight the bounce-back
-controls.enableZoom = false; // Disable zoom to prevent fighting Lenis
-controls.enablePan = false;  // Keep the user locked in the corridor
+let controls = null;
+if (window.innerWidth > 768) {
+  controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = false; // Disabled so glide momentum doesn't fight the bounce-back
+  controls.enableZoom = false; // Disable zoom to prevent fighting Lenis
+  controls.enablePan = false;  // Keep the user locked in the corridor
+} else {
+  // CRITICAL FIX: Physically prevent the WebGL canvas from natively snatching 'touchstart' events on mobile.
+  // This physically guarantees the browser naturally handles user thumb swipes uninterrupted.
+  canvas.style.pointerEvents = 'none';
+}
 
 // Listeners to snap the camera back to center trajectory
 window.addEventListener('pointerdown', () => {
@@ -291,7 +301,7 @@ let tessPositions = [];
 const tessTarget = new THREE.Vector3();
 const tessColor = new THREE.Color();
 const tessDummy = new THREE.Object3D();
-const tessCount = 2000; // Drastically reduced from 15000 due to miniaturization
+const tessCount = isMobile ? 300 : 2000; // Drastically reduced from 15000 due to miniaturization
 
 // Breathing Tesseract Globals
 let breathMesh = null;
@@ -299,7 +309,7 @@ let breathPositions = [];
 const breathTarget = new THREE.Vector3();
 const breathColor = new THREE.Color();
 const breathDummy = new THREE.Object3D();
-const breathCount = 1500; // Reduced from 10000
+const breathCount = isMobile ? 300 : 1500; // Reduced from 10000
 
 // Fire Swarm Globals
 let fireMesh = null;
@@ -307,7 +317,7 @@ let firePositions = [];
 const fireTarget = new THREE.Vector3();
 const fireColor = new THREE.Color();
 const fireDummy = new THREE.Object3D();
-const fireCount = 2000; // Reduced from 10000
+const fireCount = isMobile ? 400 : 2000; // Reduced from 10000
 
 // Update target Z directly from native scroll
 window.addEventListener('scroll', () => {
@@ -1001,7 +1011,7 @@ const tick = () => {
     }
   });
 
-  controls.update();
+  if (controls) controls.update();
   composer.render();
   css3dRenderer.render(scene, camera);
 
