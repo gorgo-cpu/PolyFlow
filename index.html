@@ -18,17 +18,77 @@
             width: 100vw;
             height: 100vh;
             background-color: #0A0A0A;
-            /* Burgundy */
             z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader-signature {
+            width: 300px;
+            height: auto;
+            margin-bottom: 2rem;
+            opacity: 0;
+            /* JS will fade it in */
+        }
+
+        .loader-signature path {
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .loader-progress-container {
+            width: 200px;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .loader-progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background-color: #ffffff;
+            transform-origin: left;
+        }
+
+        #css3d-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            /* Above WebGL (0) but below page-wrapper (1) Wait, page wrapper is 1...*/
+            pointer-events: none;
+            /* We only want the cards to catch clicks */
         }
     </style>
 </head>
 
 <body data-barba="wrapper">
     <!-- Loader Overlay -->
-    <div class="loader-overlay"></div>
+    <div class="loader-overlay">
+        <!-- SVG Signature (Stylized Path) -->
+        <svg class="loader-signature" viewBox="0 0 350 80">
+            <path class="signature-path"
+                d="M 30,50 C 30,50 25,20 40,20 C 55,20 60,40 50,55 M 65,40 C 60,60 85,60 85,40 M 100,20 C 100,20 95,60 95,60 M 115,40 C 115,60 135,60 135,40 C 135,40 120,80 110,80 M 155,20 C 145,20 145,60 145,60 M 170,20 C 170,20 165,60 165,60 M 185,40 C 180,60 205,60 205,40 M 220,40 C 220,60 240,60 240,40 C 240,40 255,40 260,60" />
+        </svg>
+        <div class="loader-progress-container">
+            <div class="loader-progress-bar"></div>
+        </div>
+    </div>
 
     <canvas id="webgl-canvas"></canvas>
+    <div id="css3d-container"></div>
 
     <!-- UI Layer -->
     <div class="page-wrapper" data-barba="container" data-barba-namespace="home">
@@ -36,62 +96,60 @@
         <!-- ═══ STATE 0 — THE STATIC VOID ═══ -->
         <section class="section state-void grid-container">
             <span class="split-target utility-label utility-top-right">EST. BUCHAREST</span>
-            <h1 class="split-target huge-text">THE WEB<br>IS FLAT.</h1>
-            <p class="split-target italic-sub">And we make it FLOW</p>
+            <h1 class="split-target huge-text">POLYFLOW</h1>
+            <p class="split-target italic-sub">Where precision meets narrative flow.</p>
             <p class="split-target caption caption-right">[ SCROLL TO ENTER THE THIRD ]</p>
         </section>
 
-        <!-- ═══ STATE 1 — THE ACT OF ARCHITECTURE ═══ -->
+        <!-- ═══ STATE 1 — THE VISION ═══ -->
         <section class="section state-architecture">
             <div class="glass-lens grid-container">
-                <span class="split-target section-label">001 — THE ARCHITECTURE</span>
-                <h2 class="split-target huge-text">THEY TOLD YOU<br>3D WAS SLOW.</h2>
-                <p class="split-target italic-sub italic-response">We engineered it to be weightless.</p>
-                <div class="split-target tech-poetry content-text">
-                    <p>Custom GLSL shaders.</p>
-                    <p>Three.js at 60 frames per second.</p>
-                    <p>WebGPU-ready render pipelines.</p>
-                    <br>
-                    <p>Latency measured in fractions</p>
-                    <p>your clients will never feel.</p>
-                    <br>
-                    <p>We don't hide the math.</p>
-                    <p>We make it beautiful.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- ═══ STATE 2 — THE BRIDGE ═══ -->
-        <section class="section state-bridge">
-            <div class="glass-lens grid-container">
-                <span class="split-target section-label">002 — THE BRIDGE</span>
-                <h2 class="split-target huge-text">WE DON'T SELL<br>PIXELS.</h2>
-                <p class="split-target italic-sub italic-continuation">We sell the silence after someone stops
-                    scrolling.
+                <span class="split-target section-label">01 — BEYOND THE SURFACE</span>
+                <h2 class="split-target huge-text">BEYOND THE<br>SURFACE.</h2>
+                <p class="split-target italic-sub italic-response">Where standard browsing ends and immersion begins.
                 </p>
                 <div class="split-target tech-poetry content-text">
-                    <p>Elevated dwell time.</p>
-                    <p>Deeper conversion paths.</p>
-                    <p>A market position that no WordPress theme</p>
-                    <p>will ever reach.</p>
+                    <p>Most of the web is built on flat foundations.</p>
+                    <p>We architect digital depth to turn passive visitors</p>
+                    <p>into active participants.</p>
                     <br>
-                    <p>An Aston Martin doesn't explain its engine</p>
-                    <p>at the traffic light.</p>
-                    <p>It simply arrives.</p>
-                    <br>
-                    <p>Your brand deserves that weight.</p>
+                    <p>At Polyflow, we don't just design sites,</p>
+                    <p>we create brand landmarks.</p>
                 </div>
             </div>
         </section>
 
-        <!-- ═══ STATE 3 — THE SUMMONS ═══ -->
+        <!-- ═══ STATE 2 — THE ENGINE ═══ -->
+        <section class="section state-bridge">
+            <div class="glass-lens grid-container">
+                <span class="split-target section-label">02 — THE PRECISION ENGINE</span>
+                <h2 class="split-target huge-text">THE PRECISION<br>ENGINE.</h2>
+                <p class="split-target italic-sub italic-continuation">Engineered for high-performance narrative.</p>
+                <div class="split-target tech-poetry content-text">
+                    <p>We've killed the myth that 3D is slow.</p>
+                    <p>With a CS-first approach to WebGPU, Three.js,</p>
+                    <p>and custom GLSL shaders, we deliver 60FPS experiences</p>
+                    <p>that load faster than traditional 2D layouts.</p>
+                    <br>
+                    <p>No lag. No friction.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ STATE 3 — THE RESULT ═══ -->
         <section class="section state-summons">
             <div class="glass-lens grid-container">
-                <span class="split-target section-label">003 — THE SUMMONS</span>
-                <h3 class="split-target huge-text summons-headline">LET'S BUILD<br>SOMETHING<br>WITH MASS.</h3>
-                <p class="split-target italic-sub summons-invitation">No pitch deck. No proposal template.<br>A
-                    conversation
-                    over good coffee,<br>where your vision meets our architecture.</p>
+                <span class="split-target section-label">03 — ARCHITECTING CONVERSION</span>
+                <h3 class="split-target huge-text summons-headline">ARCHITECTING<br>CONVERSION.</h3>
+                <p class="split-target italic-sub summons-invitation">Elevated dwell time. Lasting prestige.</p>
+                <div class="split-target tech-poetry content-text">
+                    <p>Immersive storytelling leads to deeper brand loyalty.</p>
+                    <p>We bridge the gap between technical complexity</p>
+                    <p>and business ROI.</p>
+                    <br>
+                    <p>Let's discuss your brand's third dimension</p>
+                    <p>over a business lunch in Bucharest.</p>
+                </div>
                 <a href="#" class="cta-button split-target">[ REQUEST THE BLUEPRINTS ]</a>
                 <p class="split-target caption footer-stamp">POLYFLOW — BUCHAREST — MMXXVI</p>
             </div>
@@ -99,7 +157,7 @@
 
     </div>
 
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/main.jsx"></script>
 </body>
 
 </html>

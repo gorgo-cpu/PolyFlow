@@ -71,14 +71,13 @@ html.lenis body {
 }
 
 .section {
-  min-height: 100vh;
+  min-height: auto;
   display: grid;
   align-items: center;
   align-content: center;
-  padding-top: 6vh;
-  padding-bottom: 6vh;
+  padding: 4rem 0;
   pointer-events: auto;
-  /* Re-enable clicks for UI text */
+  width: 1200px;
 }
 
 /* Typography Utilities */
@@ -161,7 +160,14 @@ html.lenis body {
   grid-row: 1;
   align-self: start;
   text-align: right;
-  padding-top: 3vh;
+  padding-top: 1vh;
+  /* Pulled higher towards the top edge */
+  font-size: 1.5rem;
+  /* 2× the base 0.75rem utility-label size */
+  letter-spacing: 0.2em;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.4;
 }
 
 .state-void h1 {
@@ -177,11 +183,21 @@ html.lenis body {
 }
 
 .state-void .caption-right {
-  grid-column: 10 / 13;
-  grid-row: 2;
-  align-self: start;
-  text-align: right;
-  padding-top: 1rem;
+  grid-column: 1 / 13;
+  /* Full-width so we can center it */
+  grid-row: 4;
+  /* Push to a lower row */
+  align-self: end;
+  text-align: center;
+  /* True center */
+  padding-bottom: 4vh;
+  /* Lower third of the viewport */
+  font-size: 1.7rem;
+  /* 2× the base 0.85rem caption size */
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.6;
 }
 
 /* ═══════════════════════════════════════════════
@@ -192,11 +208,11 @@ html.lenis body {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-  padding: 5rem 4vw; /* More breathable internal space */
+  padding: 5rem 4rem;
   will-change: backdrop-filter;
-  width: 96%;
-  max-width: 1300px;
+  width: 1200px;
   margin: 0 auto;
+  /* color inherits from body (#0A0A0A) — dark text on frosted glass */
 }
 
 /* ═══════════════════════════════════════════════
@@ -287,7 +303,7 @@ html.lenis body {
   grid-column: 1 / 13;
   grid-row: 1;
   align-self: center;
-  text-align: center;
+  text-align: right;
   font-size: clamp(2.5rem, 6vw, 6.5rem);
   letter-spacing: -0.05em;
 }
@@ -300,9 +316,16 @@ html.lenis body {
   font-size: clamp(1.2rem, 2vw, 2rem);
 }
 
+.state-summons .tech-poetry {
+  grid-column: 5 / 11;
+  grid-row: 3;
+  align-self: start;
+  padding-top: 2rem;
+}
+
 .cta-button {
   grid-column: 4 / 10;
-  grid-row: 3;
+  grid-row: 4;
   justify-self: center;
   align-self: start;
   display: inline-block;
@@ -363,7 +386,8 @@ html.lenis body {
   }
 
   /* Force the glass lens to act as a pure stacking column on mobile, ignoring the desktop grid completely */
-  .glass-lens, .section {
+  .glass-lens,
+  .section {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -372,25 +396,31 @@ html.lenis body {
   }
 
   /* All direct children MUST be centered and strictly single column */
-  .section > *, .glass-lens > * {
+  .section>*,
+  .glass-lens>* {
     text-align: center !important;
     width: 100% !important;
     margin: 0 !important;
-    grid-column: 1 / -1 !important; /* Strip grid bleed */
-    align-self: center !important; /* Strip grid bleed */
+    grid-column: 1 / -1 !important;
+    /* Strip grid bleed */
+    align-self: center !important;
+    /* Strip grid bleed */
   }
 
   .glass-lens {
     position: relative;
     width: 92% !important;
-    padding: 3.5rem 1.5rem 4rem !important; /* Slightly more top padding inside the card */
-    margin-top: 5rem !important; /* Extra space for the higher floating tag */
+    padding: 3.5rem 1.5rem 4rem !important;
+    /* Slightly more top padding inside the card */
+    margin-top: 5rem !important;
+    /* Extra space for the higher floating tag */
   }
 
   /* Extract the label to perfectly float above and clear the glass card on mobile */
   .section .section-label {
     position: absolute !important;
-    top: -4.5rem !important; /* Float higher above the card */
+    top: -4.5rem !important;
+    /* Float higher above the card */
     left: 0 !important;
     width: 100% !important;
     text-align: center !important;
@@ -400,7 +430,9 @@ html.lenis body {
   }
 
   /* Specific mobile overrides */
-  .section h1, .section h2, .section h3 {
+  .section h1,
+  .section h2,
+  .section h3 {
     text-align: center !important;
     font-size: clamp(2rem, 9vw, 3.2rem) !important;
     line-height: 1.05 !important;

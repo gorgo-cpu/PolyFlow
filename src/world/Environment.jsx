@@ -49,7 +49,20 @@ export class Environment {
    * @param {number} progress — 0 to 1
    */
   transitionToPortal(progress) {
-    // TODO: Lerp light intensities and colors
-    // TODO: Adjust fog density
+    // 1. Lerp light intensities (Dim ambient/directional, spike accent)
+    this.ambientLight.intensity = THREE.MathUtils.lerp(0.3, 0.0, progress);
+    this.directionalLight.intensity = THREE.MathUtils.lerp(1.0, 0.0, progress);
+    this.accentLight.intensity = THREE.MathUtils.lerp(1.5, 10.0, progress);
+
+    // 2. Lerp colors (Shift accent light from Base to Pure White energy)
+    if (!this._baseAccentColor) this._baseAccentColor = new THREE.Color('#6C63FF');
+    if (!this._targetAccentColor) this._targetAccentColor = new THREE.Color('#ffffff');
+    this.accentLight.color.lerpColors(this._baseAccentColor, this._targetAccentColor, progress);
+
+    // 3. Adjust fog density (Bring fog closer to completely shroud the scene)
+    if (this.scene.instance.fog) {
+      this.scene.instance.fog.near = THREE.MathUtils.lerp(5, 0.1, progress);
+      this.scene.instance.fog.far = THREE.MathUtils.lerp(15, 4, progress);
+    }
   }
 }
