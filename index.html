@@ -158,6 +158,54 @@
     </div>
 
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="contact-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="contact-modal__backdrop"></div>
+        <div class="contact-modal__panel">
+
+            <button class="contact-modal__close" aria-label="Close modal">[ × CLOSE ]</button>
+
+            <div class="contact-modal__form-wrap" id="modal-form-wrap">
+                <span class="contact-modal__label-top">04 — INITIATE CONTACT</span>
+                <h2 class="contact-modal__title" id="modal-title">REQUEST THE<br>BLUEPRINTS.</h2>
+                <p class="contact-modal__subtitle">Tell us about your landmark.</p>
+
+                <form class="contact-modal__form" id="contact-form" novalidate>
+                    <div class="contact-modal__field">
+                        <label class="contact-modal__field-label" for="field-name">NAME</label>
+                        <input class="contact-modal__input" type="text" id="field-name" name="name" autocomplete="name" required />
+                    </div>
+                    <div class="contact-modal__field">
+                        <label class="contact-modal__field-label" for="field-email">EMAIL</label>
+                        <input class="contact-modal__input" type="email" id="field-email" name="email" autocomplete="email" required />
+                    </div>
+                    <div class="contact-modal__field">
+                        <label class="contact-modal__field-label" for="field-company">COMPANY</label>
+                        <input class="contact-modal__input" type="text" id="field-company" name="company" autocomplete="organization" />
+                    </div>
+                    <div class="contact-modal__field">
+                        <label class="contact-modal__field-label" for="field-budget">BUDGET</label>
+                        <input class="contact-modal__input" type="text" id="field-budget" name="budget" placeholder="€5,000 – €15,000" />
+                    </div>
+                    <div class="contact-modal__field contact-modal__field--full">
+                        <label class="contact-modal__field-label" for="field-message">MESSAGE</label>
+                        <textarea class="contact-modal__input contact-modal__textarea" id="field-message" name="message" rows="4" required></textarea>
+                    </div>
+                    <div class="contact-modal__error" id="modal-error" aria-live="polite"></div>
+                    <button type="submit" class="cta-button contact-modal__submit" id="modal-submit">[ TRANSMIT ]</button>
+                </form>
+            </div>
+
+            <!-- Success state -->
+            <div class="contact-modal__success" id="modal-success" aria-live="polite">
+                <span class="contact-modal__success-label">TRANSMISSION COMPLETE</span>
+                <p class="contact-modal__success-message">[ BLUEPRINTS DISPATCHED ]</p>
+                <p class="contact-modal__success-sub">We'll be in contact within 48 hours.</p>
+            </div>
+
+        </div>
+    </div>
 </body>
 
 </html>

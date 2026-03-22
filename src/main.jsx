@@ -102,6 +102,7 @@ if (window.innerWidth > 768) {
 // Snap-back only on desktop — on mobile these fire on every scroll touch and fight gesture recognition
 if (window.innerWidth > 768) {
   window.addEventListener('pointerdown', () => {
+    if (document.getElementById('contact-modal')?.classList.contains('is-open')) return;
     gsap.killTweensOf(camera.position);
     // If a CTA tween was killed mid-flight, its onComplete (lenis.start) never fires — restart here
     lenis.start();
@@ -380,19 +381,95 @@ modelLoadedPromise.then(() => {
       if (button) {
         button.addEventListener('click', (e) => {
           e.preventDefault();
-          gsap.killTweensOf(camera.position, 'z'); // Kill only z tweens — leave snap-back (x,y) intact
-          lenis.stop();
-          gsap.to(camera.position, {
-            z: data.z + 5,
-            duration: 1.5,
-            ease: "power3.inOut",
-            onComplete: () => lenis.start()
-          });
-          // Also sync global targets so scroll doesn't snap back immediately upon resume
-          targetCameraZ = data.z + 5;
-          currentCameraZ = data.z + 5;
+          openContactModal();
         });
       }
+    }
+  });
+
+  // ── Contact Modal ─────────────────────────────
+  const modal         = document.getElementById('contact-modal');
+  const modalBackdrop = modal.querySelector('.contact-modal__backdrop');
+  const modalPanel    = modal.querySelector('.contact-modal__panel');
+  const modalClose    = modal.querySelector('.contact-modal__close');
+  const contactForm   = document.getElementById('contact-form');
+  const formWrap      = document.getElementById('modal-form-wrap');
+  const successState  = document.getElementById('modal-success');
+  const errorEl       = document.getElementById('modal-error');
+  const submitBtn     = document.getElementById('modal-submit');
+
+  function openContactModal() {
+    lenis.stop();
+    modal.classList.add('is-open');
+    gsap.set(modalBackdrop, { opacity: 0 });
+    gsap.set(modalPanel,    { scale: 0.94, opacity: 0 });
+    gsap.timeline()
+      .to(modalBackdrop, { opacity: 1, duration: 0.35, ease: 'power2.out' }, 0)
+      .to(modalPanel,    { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(1.5)' }, 0.05);
+    requestAnimationFrame(() => modalClose.focus());
+  }
+
+  function closeContactModal() {
+    gsap.timeline({ onComplete: () => {
+      modal.classList.remove('is-open');
+      errorEl.textContent = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = '[ TRANSMIT ]';
+      formWrap.style.display = '';
+      successState.style.display = 'none';
+    }})
+      .to(modalPanel,    { scale: 0.94, opacity: 0, duration: 0.3, ease: 'power2.in' }, 0)
+      .to(modalBackdrop, { opacity: 0,              duration: 0.3, ease: 'power2.in' }, 0);
+    lenis.start();
+  }
+
+  modalClose.addEventListener('click', closeContactModal);
+  modalBackdrop.addEventListener('click', closeContactModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeContactModal();
+  });
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name    = contactForm.name.value.trim();
+    const email   = contactForm.email.value.trim();
+    const message = contactForm.message.value.trim();
+
+    if (!name || !email || !message) {
+      errorEl.textContent = '[ NAME, EMAIL AND MESSAGE ARE REQUIRED ]';
+      return;
+    }
+
+    errorEl.textContent = '';
+    submitBtn.disabled = true;
+    submitBtn.textContent = '[ TRANSMITTING... ]';
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          company: contactForm.company.value.trim(),
+          budget:  contactForm.budget.value.trim(),
+          message,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+
+      formWrap.style.display = 'none';
+      successState.style.display = 'flex';
+      gsap.fromTo(successState, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
+
+    } catch (err) {
+      errorEl.textContent = `[ TRANSMISSION FAILED — ${err.message.toUpperCase()} ]`;
+      submitBtn.disabled = false;
+      submitBtn.textContent = '[ TRANSMIT ]';
     }
   });
 
