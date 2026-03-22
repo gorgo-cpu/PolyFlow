@@ -3,6 +3,8 @@
 // ─────────────────────────────────────────────
 // Adapted from Three.js Journey Lesson 33
 
+precision mediump float;
+
 uniform vec3 uColor;
 uniform float uTime;
 

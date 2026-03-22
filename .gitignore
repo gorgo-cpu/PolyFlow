@@ -4,3 +4,9 @@ dist/
 *.local
 .env
 .vscode/
+
+# Analysis & documentation artifacts
+ANALYSIS.md
+
+# Three.js Journey reference resources (local only, not part of the project)
+resources_from_ThreeJS_Journey/

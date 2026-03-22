@@ -17,6 +17,8 @@ body {
   color: #0A0A0A;
   font-family: 'Outfit', sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Tell iOS to treat vertical touch as scroll, not an ambiguous gesture */
+  touch-action: pan-y;
 }
 
 /* Lenis recommended CSS */
@@ -393,6 +395,13 @@ html.lenis body {
     align-items: center !important;
     justify-content: center !important;
     gap: 1.5rem !important;
+  }
+
+  /* Replace backdrop-filter with solid fill — blur compositing is a known iOS perf killer */
+  .glass-lens {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(10, 10, 10, 0.88) !important;
   }
 
   /* All direct children MUST be centered and strictly single column */

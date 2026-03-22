@@ -1,6 +1,8 @@
 // ─────────────────────────────────────────────
 // Portal Fragment Shader
 // ─────────────────────────────────────────────
+
+precision mediump float;
 // Animated radial distortion with noise-driven vortex.
 // Reference: resources_from_ThreeJS_Journey/shader_templates/noise_functions.glsl
 
@@ -51,4 +53,6 @@ void main() {
     float alpha = uActivationProgress * smoothstep(0.5, 0.0, dist);
 
     gl_FragColor = vec4(color, alpha);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
 }

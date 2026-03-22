@@ -59,8 +59,9 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
 
   // Crucial iOS Fix: Dynamically protect the pixel ratio during Safari URL bar shifts
-  const targetPixelRatio = window.innerWidth <= 768 ? 1 : Math.min(window.devicePixelRatio, 2);
-  
+  const nowMobile = window.innerWidth <= 768;
+  const targetPixelRatio = nowMobile ? 1 : Math.min(window.devicePixelRatio, 2);
+
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(targetPixelRatio);
 
@@ -69,6 +70,14 @@ window.addEventListener('resize', () => {
   // Update composer on resize
   composer.setSize(sizes.width, sizes.height);
   composer.setPixelRatio(targetPixelRatio);
+
+  // Reactively toggle expensive passes based on current breakpoint (handles orientation change)
+  filmPass.enabled = !nowMobile;
+  rgbShiftPass.enabled = !nowMobile;
+  bloomPass.resolution.set(
+    nowMobile ? sizes.width / 2 : sizes.width,
+    nowMobile ? sizes.height / 2 : sizes.height
+  );
 });
 
 // ── Camera ─────────────────────────────────────
@@ -94,20 +103,22 @@ if (window.innerWidth > 768) {
   canvas.style.pointerEvents = 'none';
 }
 
-// Listeners to snap the camera back to center trajectory
-window.addEventListener('pointerdown', () => {
-  gsap.killTweensOf(camera.position);
-});
-
-window.addEventListener('pointerup', () => {
-  // Snap camera X/Y exactly back to dead center of the corridor
-  gsap.to(camera.position, {
-    x: 0,
-    y: 0,
-    duration: 1.2,
-    ease: "back.out(1.2, 0.4)" // Soft elastic bounce
+// Snap-back only on desktop — on mobile these fire on every scroll touch and fight gesture recognition
+if (window.innerWidth > 768) {
+  window.addEventListener('pointerdown', () => {
+    gsap.killTweensOf(camera.position);
   });
-});
+
+  window.addEventListener('pointerup', () => {
+    // Snap camera X/Y exactly back to dead center of the corridor
+    gsap.to(camera.position, {
+      x: 0,
+      y: 0,
+      duration: 1.2,
+      ease: "back.out(1.2)" // Soft elastic bounce
+    });
+  });
+}
 
 // ── Renderer ───────────────────────────────────
 const rendererParameters = { clearColor: '#0A0A0A' };
@@ -167,13 +178,12 @@ composer.addPass(outputPass);
 // ── Mobile Performance Tier (Thermal/Battery Override) ──
 const isMobile = window.innerWidth <= 768;
 if (isMobile) {
-  console.log("📱 Mobile Tier: Reducing render overhead");
   renderer.setPixelRatio(1);
   composer.setPixelRatio(1);
-  // Halve the bloom resolution
   bloomPass.resolution = new THREE.Vector2(sizes.width / 2, sizes.height / 2);
-  // Reduce noise calculations
-  filmPass.uniforms.nIntensity.value = 0.15;
+  // Kill the two most expensive extra passes — saves 2 full-screen GPU blits per frame
+  filmPass.enabled = false;
+  rgbShiftPass.enabled = false;
 }
 
 // ── Holographic Material ───────────────────────
@@ -301,7 +311,7 @@ let tessPositions = [];
 const tessTarget = new THREE.Vector3();
 const tessColor = new THREE.Color();
 const tessDummy = new THREE.Object3D();
-const tessCount = isMobile ? 300 : 2000; // Drastically reduced from 15000 due to miniaturization
+const tessCount = isMobile ? 150 : 500; // Reduced from 2000 — fewer particles reveals the 4D shape structure
 
 // Breathing Tesseract Globals
 let breathMesh = null;
@@ -309,7 +319,7 @@ let breathPositions = [];
 const breathTarget = new THREE.Vector3();
 const breathColor = new THREE.Color();
 const breathDummy = new THREE.Object3D();
-const breathCount = isMobile ? 300 : 1500; // Reduced from 10000
+const breathCount = isMobile ? 150 : 450; // Reduced from 1500 — fewer particles reveals the breathing shape
 
 // Fire Swarm Globals
 let fireMesh = null;
@@ -317,7 +327,7 @@ let firePositions = [];
 const fireTarget = new THREE.Vector3();
 const fireColor = new THREE.Color();
 const fireDummy = new THREE.Object3D();
-const fireCount = isMobile ? 400 : 2000; // Reduced from 10000
+const fireCount = isMobile ? 200 : 2000; // Reduced from 10000
 
 // Update target Z directly from native scroll
 window.addEventListener('scroll', () => {
@@ -369,7 +379,7 @@ modelLoadedPromise.then(() => {
       cssObj.scale.set(0.015, 0.015, 0.015);
       cssObj.position.set(0, 0, data.z);
       scene.add(cssObj);
-      cssObjects.push({ obj: cssObj, dom: data.el, z: data.z });
+      cssObjects.push({ obj: cssObj, dom: data.el, z: data.z, inners: Array.from(data.el.querySelectorAll('.line-inner')) });
 
       const button = data.el.querySelector('.cta-button');
       if (button) {
@@ -379,7 +389,8 @@ modelLoadedPromise.then(() => {
           gsap.to(camera.position, {
             z: data.z + 5,
             duration: 1.5,
-            ease: "power3.inOut"
+            ease: "power3.inOut",
+            onComplete: () => lenis.start()
           });
           // Also sync global targets so scroll doesn't snap back immediately upon resume
           targetCameraZ = data.z + 5;
@@ -424,14 +435,15 @@ modelLoadedPromise.then(() => {
       bpMesh.instanceMatrix.needsUpdate = true;
       if (bpMesh.instanceColor) bpMesh.instanceColor.needsUpdate = true;
 
-      // Brought back to its original placement in the corridor
-      bpMesh.position.set(xPos, 0, zPos);
+      // Start off-screen left — flies in to xPos as camera enters corridor
+      const fibStartX = -22;
+      bpMesh.position.set(fibStartX, 0, zPos);
 
       // Smooth, continuous single-axis spin restored
       gsap.to(bpMesh.rotation, { y: Math.PI * 2, duration: 40, ease: "none", repeat: -1 });
 
       scene.add(bpMesh);
-      blueprints.push({ mesh: bpMesh, mat: bpMat, z: zPos });
+      blueprints.push({ mesh: bpMesh, mat: bpMat, z: zPos, startX: fibStartX, endX: xPos });
 
     } else if (i === 1) {
       // User's custom 3D Cubic Grid Swarm for the second element
@@ -467,13 +479,15 @@ modelLoadedPromise.then(() => {
       bpMesh.instanceMatrix.needsUpdate = true;
       if (bpMesh.instanceColor) bpMesh.instanceColor.needsUpdate = true;
 
-      bpMesh.position.set(xPos, 0, zPos);
+      // Start off-screen right — flies in to xPos as camera enters corridor
+      const cubeStartX = 32;
+      bpMesh.position.set(cubeStartX, 0, zPos);
 
       // Slow structural spin to match the sequence
       gsap.to(bpMesh.rotation, { y: Math.PI * 2, duration: 40, ease: "none", repeat: -1 });
 
       scene.add(bpMesh);
-      blueprints.push({ mesh: bpMesh, mat: bpMat, z: zPos });
+      blueprints.push({ mesh: bpMesh, mat: bpMat, z: zPos, startX: cubeStartX, endX: xPos });
 
     } else if (i === 2) {
       // User's custom Torus Knot for the third element
@@ -707,7 +721,7 @@ const tick = () => {
   }
 
   // Tesseract Dynamic Animation Setup (Spatial Occlusion active to prevent CPU exhaustion)
-  if (tessMesh && Math.abs(currentCameraZ - tessMesh.position.z) < 150) {
+  if (tessMesh && Math.abs(currentCameraZ - tessMesh.position.z) < 55) {
     const scale = 5.0; // Uniform downscaling
     const chaos = 1.2;
     const pulseSpeed = 0.5; // Halved internal pulsing speed
@@ -810,7 +824,7 @@ const tick = () => {
   }
 
   // Breathing Tesseract Dynamic Animation Setup (Spatial Occlusion active)
-  if (breathMesh && Math.abs(currentCameraZ - breathMesh.position.z) < 150) {
+  if (breathMesh && Math.abs(currentCameraZ - breathMesh.position.z) < 55) {
     const scale = 5.0; // Uniform parameter bounding
     const breath = 1.5;
     const rotSpeed = 0.5;
@@ -868,7 +882,7 @@ const tick = () => {
   }
 
   // Fire Swarm Dynamic Animation Setup (Spatial Occlusion active, optimized speed & bounded scope)
-  if (fireMesh && Math.abs(currentCameraZ - fireMesh.position.z) < 150) {
+  if (fireMesh && Math.abs(currentCameraZ - fireMesh.position.z) < 55) {
     const scale = 12.0; // Tighter vertical mapping to match base radii equivalent 
     const twist = 5.0;
     const speed = 0.15; // Slowed down significantly further to a crawl
@@ -958,7 +972,7 @@ const tick = () => {
 
   camera.position.z = currentCameraZ;
   // Force the camera to always look forward down the tunnel, never turning back!
-  controls.target.set(0, 0, currentCameraZ - 20);
+  if (controls) controls.target.set(0, 0, currentCameraZ - 20);
 
   // 1. Dynamic Portal Bloom & FOV warp based on actual camera.position.z
   let distanceToSphere = Math.abs(currentCameraZ);
@@ -977,11 +991,11 @@ const tick = () => {
   }
   camera.updateProjectionMatrix();
 
-  // 2. Blueprint Proxy Fading
+  // 2. Blueprint Proxy Fading + Entry Animation
   blueprints.forEach(bp => {
     const zOffset = currentCameraZ - bp.z;
     let targetOpacity = 0;
-    
+
     if (zOffset >= 0 && zOffset < 180) {
       // Objects slowly materialize out of the darkness up to 180 units ahead
       targetOpacity = 0.85 * (1 - (zOffset / 180));
@@ -989,31 +1003,42 @@ const tick = () => {
       // Sharp fade exactly as the object passes behind the camera lens (FOV exit)
       targetOpacity = 0.85 * (1 - Math.abs(zOffset) / 15);
     }
-    
+
     bp.mat.opacity += (targetOpacity - bp.mat.opacity) * 0.1;
+
+    // X-axis entry: fly from screen extremity to resting position as camera passes z=0
+    if (bp.startX !== undefined) {
+      const raw = Math.min(1, Math.max(0, currentCameraZ / bp.z));
+      const eased = 1 - Math.pow(1 - raw, 3); // ease-out cubic
+      bp.mesh.position.x = bp.startX + (bp.endX - bp.startX) * eased;
+    }
   });
 
   // 3. CSS3D Text Animations Trigger Array
   cssObjects.forEach(card => {
     const dist = currentCameraZ - card.z;
     if (dist > 0 && dist < 30) {
-      const inners = card.dom.querySelectorAll('.line-inner');
-      if (inners.length > 0 && !card.revealed) {
+      if (card.inners.length > 0 && !card.revealed) {
         card.revealed = true;
-        gsap.to(inners, { y: '0%', ease: 'power4.out', duration: 1.2, stagger: 0.1 });
+        gsap.to(card.inners, { y: '0%', ease: 'power4.out', duration: 1.2, stagger: 0.1 });
       }
     } else if (dist > 50 || dist < -10) {
-      const inners = card.dom.querySelectorAll('.line-inner');
-      if (card.revealed && inners.length > 0) {
+      if (card.revealed && card.inners.length > 0) {
         card.revealed = false;
-        gsap.set(inners, { y: '110%' });
+        gsap.set(card.inners, { y: '110%' });
       }
     }
   });
 
   if (controls) controls.update();
   composer.render();
-  css3dRenderer.render(scene, camera);
+
+  // Only composite the CSS3D layer when at least one card is within view range
+  const anyCSSVisible = cssObjects.some(card => {
+    const dist = currentCameraZ - card.z;
+    return dist > -15 && dist < 200;
+  });
+  if (anyCSSVisible) css3dRenderer.render(scene, camera);
 
   window.requestAnimationFrame(tick);
 };
