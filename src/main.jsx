@@ -293,7 +293,7 @@ gltfLoader.load(
 const clock = new THREE.Clock();
 
 // ── Constants ───────────────────────────────────
-const BLUEPRINT_COLOR = BLUEPRINT_COLOR; // Warm cream/ivory — shared across all blueprint objects
+const BLUEPRINT_COLOR = 0xFFF5E4; // Warm cream/ivory — shared across all blueprint objects
 
 // Global Spatial Arrays
 const cssObjects = [];
