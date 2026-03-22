@@ -381,7 +381,12 @@ modelLoadedPromise.then(() => {
       if (button) {
         button.addEventListener('click', (e) => {
           e.preventDefault();
-          openContactModal();
+          const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
+          if (isMobile) {
+            window.location.href = 'mailto:clients.polyflow@gmail.com?subject=%5B%20BLUEPRINT%20REQUEST%20%5D&body=NAME%3A%20%0ACOMPANY%3A%20%0ABUDGET%3A%20%0A%0AMESSAGE%3A%20';
+          } else {
+            openContactModal();
+          }
         });
       }
     }
@@ -392,11 +397,6 @@ modelLoadedPromise.then(() => {
   const modalBackdrop = modal.querySelector('.contact-modal__backdrop');
   const modalPanel    = modal.querySelector('.contact-modal__panel');
   const modalClose    = modal.querySelector('.contact-modal__close');
-  const contactForm   = document.getElementById('contact-form');
-  const formWrap      = document.getElementById('modal-form-wrap');
-  const successState  = document.getElementById('modal-success');
-  const errorEl       = document.getElementById('modal-error');
-  const submitBtn     = document.getElementById('modal-submit');
 
   function openContactModal() {
     lenis.stop();
@@ -410,14 +410,7 @@ modelLoadedPromise.then(() => {
   }
 
   function closeContactModal() {
-    gsap.timeline({ onComplete: () => {
-      modal.classList.remove('is-open');
-      errorEl.textContent = '';
-      submitBtn.disabled = false;
-      submitBtn.textContent = '[ TRANSMIT ]';
-      formWrap.style.display = '';
-      successState.style.display = 'none';
-    }})
+    gsap.timeline({ onComplete: () => { modal.classList.remove('is-open'); } })
       .to(modalPanel,    { scale: 0.94, opacity: 0, duration: 0.3, ease: 'power2.in' }, 0)
       .to(modalBackdrop, { opacity: 0,              duration: 0.3, ease: 'power2.in' }, 0);
     lenis.start();
@@ -427,50 +420,6 @@ modelLoadedPromise.then(() => {
   modalBackdrop.addEventListener('click', closeContactModal);
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal.classList.contains('is-open')) closeContactModal();
-  });
-
-  contactForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name    = contactForm.name.value.trim();
-    const email   = contactForm.email.value.trim();
-    const message = contactForm.message.value.trim();
-
-    if (!name || !email || !message) {
-      errorEl.textContent = '[ NAME, EMAIL AND MESSAGE ARE REQUIRED ]';
-      return;
-    }
-
-    errorEl.textContent = '';
-    submitBtn.disabled = true;
-    submitBtn.textContent = '[ TRANSMITTING... ]';
-
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          company: contactForm.company.value.trim(),
-          budget:  contactForm.budget.value.trim(),
-          message,
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || `HTTP ${res.status}`);
-      }
-
-      formWrap.style.display = 'none';
-      successState.style.display = 'flex';
-      gsap.fromTo(successState, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
-
-    } catch (err) {
-      errorEl.textContent = `[ TRANSMISSION FAILED — ${err.message.toUpperCase()} ]`;
-      submitBtn.disabled = false;
-      submitBtn.textContent = '[ TRANSMIT ]';
-    }
   });
 
   // ── 3. Wireframe Blueprints ──
@@ -633,7 +582,7 @@ modelLoadedPromise.then(() => {
       const coneGeo = new THREE.ConeGeometry(4, 9, 16); // Compressed bounds
       const bpMat = new THREE.MeshBasicMaterial({ color: BLUEPRINT_COLOR, transparent: true, opacity: 0, wireframe: true });
       const coneMesh = new THREE.Mesh(coneGeo, bpMat);
-      coneMesh.position.set(xPos, 0, zPos);
+      coneMesh.position.set(isMobile ? xPos * 0.45 : xPos, 0, zPos);
 
       gsap.to(coneMesh.rotation, {
         y: Math.PI * 2,
@@ -659,7 +608,7 @@ modelLoadedPromise.then(() => {
       }
 
       // Overriding generic blueprint bounds to pull the 6th element immediately alongside the camera
-      breathMesh.position.set(xPos * 0.4, 0, zPos);
+      breathMesh.position.set(isMobile ? xPos * 0.2 : xPos * 0.4, 0, zPos);
       scene.add(breathMesh);
       blueprints.push({ mesh: breathMesh, mat: bpMat, z: zPos });
 
@@ -675,7 +624,7 @@ modelLoadedPromise.then(() => {
         fireMesh.setColorAt(j, fireColor.setHex(BLUEPRINT_COLOR));
       }
 
-      fireMesh.position.set(xPos, 0, zPos);
+      fireMesh.position.set(isMobile ? xPos * 0.45 : xPos, 0, zPos);
       scene.add(fireMesh);
       blueprints.push({ mesh: fireMesh, mat: bpMat, z: zPos });
 
