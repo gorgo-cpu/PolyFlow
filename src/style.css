@@ -398,10 +398,16 @@ html.lenis body {
   }
 
   /* Replace backdrop-filter with solid fill — blur compositing is a known iOS perf killer */
+  /* Light text required since frosted glass isn't available — desktop relies on blur letting scene show through */
   .glass-lens {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    background: rgba(10, 10, 10, 0.88) !important;
+    background: rgba(12, 12, 16, 0.78) !important;
+    color: #E8E4E0 !important;
+  }
+
+  .glass-lens * {
+    color: #E8E4E0 !important;
   }
 
   /* All direct children MUST be centered and strictly single column */
