@@ -443,7 +443,7 @@ modelLoadedPromise.then(() => {
       gsap.to(bpMesh.rotation, { y: Math.PI * 2, duration: 40, ease: "none", repeat: -1 });
 
       scene.add(bpMesh);
-      blueprints.push({ mesh: bpMesh, mat: bpMat, z: zPos, startX: fibStartX, endX: isMobile ? -7 : xPos });
+      blueprints.push({ mesh: bpMesh, mat: bpMat, z: zPos, startX: fibStartX, endX: isMobile ? -4 : xPos });
 
     } else if (i === 1) {
       // User's custom 3D Cubic Grid Swarm for the second element
@@ -487,7 +487,7 @@ modelLoadedPromise.then(() => {
       gsap.to(bpMesh.rotation, { y: Math.PI * 2, duration: 40, ease: "none", repeat: -1 });
 
       scene.add(bpMesh);
-      blueprints.push({ mesh: bpMesh, mat: bpMat, z: zPos, startX: cubeStartX, endX: isMobile ? 7 : xPos });
+      blueprints.push({ mesh: bpMesh, mat: bpMat, z: zPos, startX: cubeStartX, endX: isMobile ? 4 : xPos });
 
     } else if (i === 2) {
       // User's custom Torus Knot for the third element
