@@ -403,11 +403,11 @@ html.lenis body {
     backdrop-filter: blur(6px) saturate(140%) !important;
     -webkit-backdrop-filter: blur(6px) saturate(140%) !important;
     background: rgba(255, 255, 255, 0.06) !important;
-    color: #E8E4E0 !important;
+    color: #0A0A0A !important;
   }
 
   .glass-lens *:not(.cta-button) {
-    color: #E8E4E0 !important;
+    color: #0A0A0A !important;
   }
 
   /* All direct children MUST be centered and strictly single column */
