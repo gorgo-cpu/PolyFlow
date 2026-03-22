@@ -51,9 +51,13 @@ html.lenis body {
   height: 100%;
   outline: none;
   z-index: 0;
-  /* Changed from -1 so it sits above the body background */
-  pointer-events: auto;
-  /* Allow orbit controls to work if no UI obstructs*/
+  pointer-events: auto; /* Desktop: orbit controls need pointer events */
+}
+
+@media (max-width: 768px) {
+  #webgl-canvas {
+    pointer-events: none; /* Mobile: let touch events pass through to the scroll layer */
+  }
 }
 
 .page-wrapper {
@@ -211,7 +215,6 @@ html.lenis body {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px;
   padding: 5rem 4rem;
-  will-change: backdrop-filter;
   width: 1200px;
   margin: 0 auto;
   /* color inherits from body (#0A0A0A) — dark text on frosted glass */

@@ -3,7 +3,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import barba from '@barba/core';
 import holographicVertexShader from './shaders/sphere/vertex.glsl';
@@ -25,11 +24,12 @@ if ('scrollRestoration' in history) {
 }
 window.scrollTo(0, 0);
 
-gsap.registerPlugin(ScrollTrigger);
-
 // ── Smooth Scrolling (Lenis) ───────────────────
-const lenis = new Lenis();
-lenis.on('scroll', ScrollTrigger.update);
+const lenis = new Lenis({
+  smoothTouch: false,  // Prevent Lenis fighting iOS native rubber-band
+  duration: 1.2,
+  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease-out — premium feel
+});
 gsap.ticker.add((time) => {
   lenis.raf(time * 1000);
 });
@@ -97,16 +97,14 @@ if (window.innerWidth > 768) {
   controls.enableDamping = false; // Disabled so glide momentum doesn't fight the bounce-back
   controls.enableZoom = false; // Disable zoom to prevent fighting Lenis
   controls.enablePan = false;  // Keep the user locked in the corridor
-} else {
-  // CRITICAL FIX: Physically prevent the WebGL canvas from natively snatching 'touchstart' events on mobile.
-  // This physically guarantees the browser naturally handles user thumb swipes uninterrupted.
-  canvas.style.pointerEvents = 'none';
 }
 
 // Snap-back only on desktop — on mobile these fire on every scroll touch and fight gesture recognition
 if (window.innerWidth > 768) {
   window.addEventListener('pointerdown', () => {
     gsap.killTweensOf(camera.position);
+    // If a CTA tween was killed mid-flight, its onComplete (lenis.start) never fires — restart here
+    lenis.start();
   });
 
   window.addEventListener('pointerup', () => {
@@ -126,6 +124,7 @@ const rendererParameters = { clearColor: '#0A0A0A' };
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
   antialias: true,
+  powerPreference: 'high-performance', // Prefer discrete GPU on dual-GPU laptops
 });
 renderer.setClearColor(rendererParameters.clearColor);
 renderer.setSize(sizes.width, sizes.height);
@@ -237,10 +236,7 @@ loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
 };
 
 loadingManager.onLoad = () => {
-  // Wait a small moment for the signature to finish if it's still drawing
-  setTimeout(() => {
-    resolveModelLoad();
-  }, 500);
+  resolveModelLoad();
 };
 
 // ── Load GLTF Icosphere ────────────────────────
@@ -283,9 +279,6 @@ gltfLoader.load(
     spherePivot.add(sphere);
     scene.add(spherePivot);
 
-    // Provide a way to access the materials globally for Bloom/Wireframe dynamic adjustments
-    window.portalMaterials = { wireframeMaterial, shaderMaterial: material, bloomPass };
-
     renderer.compile(scene, camera);
   },
   // Progress
@@ -298,6 +291,9 @@ gltfLoader.load(
 
 // ── Animate & LERP State ───────────────────────
 const clock = new THREE.Clock();
+
+// ── Constants ───────────────────────────────────
+const BLUEPRINT_COLOR = BLUEPRINT_COLOR; // Warm cream/ivory — shared across all blueprint objects
 
 // Global Spatial Arrays
 const cssObjects = [];
@@ -352,7 +348,6 @@ modelLoadedPromise.then(() => {
 
   // Expand body so user can scroll indefinitely
   document.body.style.height = '1000vh';
-  ScrollTrigger.refresh();
 
   // ── 1. The Duplicate Sphere (Loop) ──
   if (mainSphere) {
@@ -385,6 +380,7 @@ modelLoadedPromise.then(() => {
       if (button) {
         button.addEventListener('click', (e) => {
           e.preventDefault();
+          gsap.killTweensOf(camera.position, 'z'); // Kill only z tweens — leave snap-back (x,y) intact
           lenis.stop();
           gsap.to(camera.position, {
             z: data.z + 5,
@@ -428,7 +424,7 @@ modelLoadedPromise.then(() => {
         dummy.updateMatrix();
 
         bpMesh.setMatrixAt(j, dummy.matrix);
-        color.setHex(0xFFF5E4); // Neon Green string
+        color.setHex(BLUEPRINT_COLOR); // Warm cream/ivory
         bpMesh.setColorAt(j, color);
       }
 
@@ -472,7 +468,7 @@ modelLoadedPromise.then(() => {
         dummy.updateMatrix();
 
         bpMesh.setMatrixAt(j, dummy.matrix);
-        color.setHex(0xFFF5E4); // Matched to main sphere green
+        color.setHex(BLUEPRINT_COLOR); // Warm cream/ivory
         bpMesh.setColorAt(j, color);
       }
 
@@ -492,8 +488,6 @@ modelLoadedPromise.then(() => {
     } else if (i === 2) {
       // User's custom Torus Knot for the third element
       const count = 200; // Thinned from 600 per user request
-      const R = 15; // Scaled down proportionately from 25 so it fits the FOV
-      const r = 4.8; // Scaled down proportionately from 8
       const dummy = new THREE.Object3D();
       const target = new THREE.Vector3();
       const color = new THREE.Color();
@@ -515,7 +509,7 @@ modelLoadedPromise.then(() => {
         dummy.updateMatrix();
 
         bpMesh.setMatrixAt(j, dummy.matrix);
-        color.setHex(0xFFF5E4); // Matched to main sphere green
+        color.setHex(BLUEPRINT_COLOR); // Warm cream/ivory
         bpMesh.setColorAt(j, color);
       }
 
@@ -539,7 +533,7 @@ modelLoadedPromise.then(() => {
 
       for (let j = 0; j < tessCount; j++) {
         tessPositions.push(new THREE.Vector3((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100));
-        tessMesh.setColorAt(j, tessColor.setHex(0xFFF5E4));
+        tessMesh.setColorAt(j, tessColor.setHex(BLUEPRINT_COLOR));
       }
 
       // Re-mapped lateral spacing to drag the object 60% inward, forcing a camera collision overlap
@@ -560,7 +554,7 @@ modelLoadedPromise.then(() => {
     } else if (i === 4) {
       // User explicitly requested a slightly spinning cone geometry
       const coneGeo = new THREE.ConeGeometry(4, 9, 16); // Compressed bounds
-      const bpMat = new THREE.MeshBasicMaterial({ color: 0xFFF5E4, transparent: true, opacity: 0, wireframe: true });
+      const bpMat = new THREE.MeshBasicMaterial({ color: BLUEPRINT_COLOR, transparent: true, opacity: 0, wireframe: true });
       const coneMesh = new THREE.Mesh(coneGeo, bpMat);
       coneMesh.position.set(xPos, 0, zPos);
 
@@ -584,7 +578,7 @@ modelLoadedPromise.then(() => {
 
       for (let j = 0; j < breathCount; j++) {
         breathPositions.push(new THREE.Vector3((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100));
-        breathMesh.setColorAt(j, breathColor.setHex(0xFFF5E4));
+        breathMesh.setColorAt(j, breathColor.setHex(BLUEPRINT_COLOR));
       }
 
       // Overriding generic blueprint bounds to pull the 6th element immediately alongside the camera
@@ -601,7 +595,7 @@ modelLoadedPromise.then(() => {
 
       for (let j = 0; j < fireCount; j++) {
         firePositions.push(new THREE.Vector3((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100));
-        fireMesh.setColorAt(j, fireColor.setHex(0xffaa00));
+        fireMesh.setColorAt(j, fireColor.setHex(BLUEPRINT_COLOR));
       }
 
       fireMesh.position.set(xPos, 0, zPos);
@@ -626,7 +620,7 @@ modelLoadedPromise.then(() => {
         const t = j * 0.333; // Math compensated for twist count ratio
 
         target.set(Math.cos(t) * r, (j * 0.01) - off, Math.sin(t) * r);
-        color.setHex(0xFFF5E4); // Matched to main sphere green
+        color.setHex(BLUEPRINT_COLOR); // Warm cream/ivory
 
         dummy.position.copy(target);
         dummy.updateMatrix();
@@ -701,13 +695,11 @@ barba.init({
   }]
 });
 
-// Initial load cleanup
-barba.hooks.after(() => {
-  ScrollTrigger.refresh();
-});
 
 const tick = () => {
-  const elapsedTime = clock.getElapsedTime();
+  // getDelta() must come first — getElapsedTime() calls it internally and would reset the timer
+  const delta = Math.min(clock.getDelta(), 0.05); // clamp: prevents huge jump on tab re-focus
+  const elapsedTime = clock.elapsedTime;
   material.uniforms.uTime.value = elapsedTime;
 
   if (mainSphere) {
@@ -725,7 +717,6 @@ const tick = () => {
     const scale = 5.0; // Uniform downscaling
     const chaos = 1.2;
     const pulseSpeed = 0.5; // Halved internal pulsing speed
-    const colorShift = 0.0;
     const warpDepth = 0.8;
     const time = elapsedTime;
 
@@ -806,21 +797,14 @@ const tick = () => {
 
       tessTarget.set(fx, fy, fz);
 
-      // --- Color mapping ---
-      const depth4D = wr3 * 0.5 + 0.5;
-      const latColor = phi / 3.14159;
-      tessColor.setHex(0xFFF5E4); // Locked to main sphere green
-
       tessPositions[i].lerp(tessTarget, 0.1);
       tessDummy.position.copy(tessPositions[i]);
       tessDummy.lookAt(0, 0, 0);
       tessDummy.updateMatrix();
 
       tessMesh.setMatrixAt(i, tessDummy.matrix);
-      tessMesh.setColorAt(i, tessColor);
     }
     tessMesh.instanceMatrix.needsUpdate = true;
-    if (tessMesh.instanceColor) tessMesh.instanceColor.needsUpdate = true;
   }
 
   // Breathing Tesseract Dynamic Animation Setup (Spatial Occlusion active)
@@ -867,18 +851,14 @@ const tick = () => {
         zRot * projScale
       );
 
-      breathColor.setHex(0xFFF5E4); // Locked to main sphere green
-
       breathPositions[i].lerp(breathTarget, 0.1);
       breathDummy.position.copy(breathPositions[i]);
       breathDummy.lookAt(0, 0, 0);
       breathDummy.updateMatrix();
 
       breathMesh.setMatrixAt(i, breathDummy.matrix);
-      breathMesh.setColorAt(i, breathColor);
     }
     breathMesh.instanceMatrix.needsUpdate = true;
-    if (breathMesh.instanceColor) breathMesh.instanceColor.needsUpdate = true;
   }
 
   // Fire Swarm Dynamic Animation Setup (Spatial Occlusion active, optimized speed & bounded scope)
@@ -926,8 +906,6 @@ const tick = () => {
       // set position
       fireTarget.set(x, y - scale * 0.5, z);
 
-      fireColor.setHex(0xFFF5E4); // Locked to main sphere green
-
       // UPDATE
       firePositions[i].lerp(fireTarget, 0.1);
       fireDummy.position.copy(firePositions[i]);
@@ -935,15 +913,13 @@ const tick = () => {
       fireDummy.updateMatrix();
 
       fireMesh.setMatrixAt(i, fireDummy.matrix);
-      fireMesh.setColorAt(i, fireColor);
     }
     fireMesh.instanceMatrix.needsUpdate = true;
-    if (fireMesh.instanceColor) fireMesh.instanceColor.needsUpdate = true;
   }
 
   // ── Spatial LERP Logic ──
-  // Interpolate camera Z smoothly towards the native scroll target
-  currentCameraZ += (targetCameraZ - currentCameraZ) * 0.08;
+  // Frame-rate-independent exponential decay: same perceived speed at 30/60/120 FPS
+  currentCameraZ += (targetCameraZ - currentCameraZ) * (1 - Math.pow(0.92, delta * 60));
 
   // Paradox Loop Teleport
   if (currentCameraZ <= -220) {
@@ -956,17 +932,16 @@ const tick = () => {
     const maxScroll = document.body.scrollHeight - window.innerHeight;
     const newScrollY = newProgress * maxScroll;
 
-    // immediate: true flawlessly overrides internal smooth scroll state
-    if (typeof lenis !== 'undefined') {
-      lenis.scrollTo(newScrollY, { immediate: true });
-    } else {
-      window.scrollTo(0, newScrollY);
-    }
+    lenis.scrollTo(newScrollY, { immediate: true });
 
-    // Reset cards for next loop
+    // Reset blueprint opacities — stale pre-teleport values would linger for many frames otherwise
+    blueprints.forEach(bp => { bp.mat.opacity = 0; });
+
+    // Reset cards for next loop — kill in-flight tweens first or gsap.set gets overridden
     cssObjects.forEach(card => {
       card.revealed = false;
-      gsap.set(card.dom.querySelectorAll('.line-inner'), { y: '110%' });
+      gsap.killTweensOf(card.inners);
+      gsap.set(card.inners, { y: '110%' });
     });
   }
 
@@ -983,13 +958,16 @@ const tick = () => {
   // Safe Bloom Scaling
   if (distanceToSphere < 10) {
     const intensity = Math.pow((10 - distanceToSphere) / 10, 3) * 4.0;
-    bloomPass.strength = 0.5 + intensity; // Base bloom restored to beautiful 0.5 limit
+    bloomPass.strength = 0.5 + intensity;
     camera.fov = 50 + (70 * (1 - (distanceToSphere / 10))); // 50 -> 120 Warp
+    camera.updateProjectionMatrix(); // FOV changes every frame in the portal zone
   } else {
-    bloomPass.strength = 0.5; // Soft 0.5
-    camera.fov = 50;
+    bloomPass.strength = 0.5;
+    if (camera.fov !== 50) {
+      camera.fov = 50; // Only update when transitioning out of the portal zone
+      camera.updateProjectionMatrix();
+    }
   }
-  camera.updateProjectionMatrix();
 
   // 2. Blueprint Proxy Fading + Entry Animation
   blueprints.forEach(bp => {
@@ -1006,10 +984,12 @@ const tick = () => {
 
     bp.mat.opacity += (targetOpacity - bp.mat.opacity) * 0.1;
 
-    // X-axis entry: fly from screen extremity to resting position as camera passes z=0
+    // X-axis entry: fly from screen extremity to resting position
+    // Scaled to 1/0.7 so animation completes at 70% of travel — object lands 30% before camera arrives
     if (bp.startX !== undefined) {
       const raw = Math.min(1, Math.max(0, currentCameraZ / bp.z));
-      const eased = 1 - Math.pow(1 - raw, 3); // ease-out cubic
+      const early = Math.min(1, raw / 0.7);
+      const eased = 1 - Math.pow(1 - early, 3); // ease-out cubic
       bp.mesh.position.x = bp.startX + (bp.endX - bp.startX) * eased;
     }
   });
@@ -1025,6 +1005,7 @@ const tick = () => {
     } else if (dist > 50 || dist < -10) {
       if (card.revealed && card.inners.length > 0) {
         card.revealed = false;
+        gsap.killTweensOf(card.inners); // Prevent 1.2s reveal tween from overriding the reset
         gsap.set(card.inners, { y: '110%' });
       }
     }
