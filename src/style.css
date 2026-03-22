@@ -462,6 +462,17 @@ html.lenis body {
     line-height: 1.4;
   }
 
+  /* Body text — larger for mobile readability */
+  .content-text {
+    font-size: clamp(1.4rem, 5vw, 1.8rem) !important;
+    line-height: 1.5;
+  }
+
+  .tech-poetry {
+    font-size: clamp(1.2rem, 4vw, 1.5rem) !important;
+    line-height: 1.7;
+  }
+
   /* Adjust Button Size for Touch */
   .cta-button {
     text-align: center;
