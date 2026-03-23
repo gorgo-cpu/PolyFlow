@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VS99S2PJ9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-8VS99S2PJ9');
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -18,7 +27,6 @@
     <meta property="og:url" content="https://polyflow.agency/">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_US">
-    <meta property="og:locale:alternate" content="ro_RO">
     <meta property="og:site_name" content="Polyflow">
 
     <!-- Twitter -->
@@ -27,10 +35,6 @@
     <meta name="twitter:description" content="Polyflow is a spatial engineering studio in Bucharest creating premium 3D websites and immersive digital experiences. Three.js, WebGL, 60FPS guaranteed.">
     <meta name="twitter:image" content="https://polyflow.agency/og/default.jpg">
 
-    <!-- Hreflang -->
-    <link rel="alternate" hreflang="en" href="https://polyflow.agency/">
-    <link rel="alternate" hreflang="ro" href="https://polyflow.agency/ro/">
-    <link rel="alternate" hreflang="x-default" href="https://polyflow.agency/">
 
     <!-- Schema: Organization -->
     <script type="application/ld+json">
@@ -95,7 +99,7 @@
       "publisher": {
         "@id": "https://polyflow.agency/#organization"
       },
-      "inLanguage": ["en", "ro"]
+      "inLanguage": "en"
     }
     </script>
 
@@ -159,21 +163,47 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Preconnect / DNS prefetch -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/models/POLY_SPHERE.glb" as="fetch" crossorigin>
+    <link rel="preload" href="/fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
 
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VS99S2PJ9"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-8VS99S2PJ9');
-    </script>
     <style>
+        /* Self-hosted fonts — eliminates render-blocking Google Fonts request */
+        @font-face {
+            font-family: 'Outfit';
+            font-style: normal;
+            font-weight: 400 700;
+            font-display: swap;
+            src: url('/fonts/outfit-latin-ext.woff2') format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+        @font-face {
+            font-family: 'Outfit';
+            font-style: normal;
+            font-weight: 400 700;
+            font-display: swap;
+            src: url('/fonts/outfit-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+        @font-face {
+            font-family: 'Playfair Display';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: url('/fonts/playfair-italic-latin-ext.woff2') format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+        @font-face {
+            font-family: 'Playfair Display';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: url('/fonts/playfair-italic-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
         /* Inline critical CSS to completely hide raw HTML before JS loads */
         .loader-overlay {
             position: fixed;
@@ -238,7 +268,19 @@
     </style>
 </head>
 
-<body data-barba="wrapper">
+<body>
+    <noscript>
+        <div style="background:#0A0A0A;color:#E8E4E0;font-family:sans-serif;padding:4rem 2rem;min-height:100vh;">
+            <h1 style="font-size:3rem;letter-spacing:-0.04em;margin-bottom:1rem;">POLYFLOW</h1>
+            <p style="font-style:italic;opacity:0.7;margin-bottom:2rem;">Where precision meets narrative flow.</p>
+            <p style="margin-bottom:1rem;">Polyflow is a spatial engineering studio in Bucharest creating premium 3D websites and immersive digital experiences using Three.js, WebGL, and custom GLSL shaders.</p>
+            <p style="margin-bottom:2rem;">We deliver 60FPS experiences that load faster than traditional 2D layouts. No lag. No friction.</p>
+            <p style="opacity:0.5;font-size:0.85rem;margin-bottom:2rem;">This site requires JavaScript for the full 3D experience.</p>
+            <hr style="border:none;border-top:1px solid rgba(232,228,224,0.15);margin-bottom:2rem;">
+            <p><strong>Contact:</strong> <a href="mailto:clients.polyflow@gmail.com" style="color:#E8E4E0;">clients.polyflow@gmail.com</a> | +40 773 388 205</p>
+            <p style="opacity:0.4;margin-top:2rem;font-size:0.75rem;letter-spacing:0.15em;">POLYFLOW — BUCHAREST — MMXXVI</p>
+        </div>
+    </noscript>
     <!-- Loader Overlay -->
     <div class="loader-overlay">
         <!-- SVG Signature (Stylized Path) -->
@@ -255,7 +297,7 @@
     <div id="css3d-container"></div>
 
     <!-- UI Layer -->
-    <div class="page-wrapper" data-barba="container" data-barba-namespace="home">
+    <div class="page-wrapper">
 
         <!-- ═══ STATE 0 — THE STATIC VOID ═══ -->
         <section class="section state-void grid-container">
@@ -304,7 +346,7 @@
         <section class="section state-summons">
             <div class="glass-lens grid-container">
                 <span class="split-target section-label">03 — ARCHITECTING CONVERSION</span>
-                <h3 class="split-target huge-text summons-headline">ARCHITECTING<br>CONVERSION.</h3>
+                <h2 class="split-target huge-text summons-headline">ARCHITECTING<br>CONVERSION.</h2>
                 <p class="split-target italic-sub summons-invitation">Elevated dwell time. Lasting prestige.</p>
                 <div class="split-target tech-poetry content-text">
                     <p>Immersive storytelling leads to deeper brand loyalty.</p>

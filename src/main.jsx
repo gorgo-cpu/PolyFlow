@@ -4,7 +4,6 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import gsap from 'gsap';
 import Lenis from 'lenis';
-import barba from '@barba/core';
 import holographicVertexShader from './shaders/sphere/vertex.glsl';
 import holographicFragmentShader from './shaders/sphere/fragment.glsl';
 
@@ -239,6 +238,14 @@ loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
 loadingManager.onLoad = () => {
   resolveModelLoad();
 };
+
+loadingManager.onError = (url) => {
+  console.error('Asset failed to load:', url);
+  resolveModelLoad();
+};
+
+// Dismiss loader after 10s even if model fails to load
+setTimeout(() => resolveModelLoad(), 10000);
 
 // ── Load GLTF Icosphere ────────────────────────
 const gltfLoader = new GLTFLoader(loadingManager);
@@ -695,35 +702,13 @@ modelLoadedPromise.then(() => {
   }
 });
 
-// ── Barba.js Page Transitions ──────────────────
-barba.init({
-  transitions: [{
-    name: 'default-transition',
-    once(data) {
-      return modelLoadedPromise.then(() => {
-        return gsap.to('.loader-overlay', {
-          yPercent: -100,
-          duration: 1.2,
-          ease: 'power3.inOut'
-        });
-      });
-    },
-    leave(data) {
-      // Scroll down from the top to cover the screen
-      return gsap.fromTo('.loader-overlay',
-        { yPercent: -100 },
-        { yPercent: 0, duration: 1.2, ease: 'power3.inOut' }
-      );
-    },
-    enter(data) {
-      // Scroll back up to reveal new page
-      return gsap.to('.loader-overlay', {
-        yPercent: -100,
-        duration: 1.2,
-        ease: 'power3.inOut'
-      });
-    }
-  }]
+// ── Loader Dismissal ──────────────────
+modelLoadedPromise.then(() => {
+  gsap.to('.loader-overlay', {
+    yPercent: -100,
+    duration: 1.2,
+    ease: 'power3.inOut'
+  });
 });
 
 

@@ -3,11 +3,31 @@ dist/
 .DS_Store
 *.local
 .env
+.env.*
 .vscode/
 .claude/
+# Cloned tools and external repos
+claude-seo/
 
 # Analysis & documentation artifacts
 ANALYSIS.md
+SEO_REPORT.md
+SEO_STRATEGY.md
+POLYFLOWS_REPOSITORY_BREAKDOWN.md
 
 # Three.js Journey reference resources (local only, not part of the project)
 resources_from_ThreeJS_Journey/
+
+# OS and editor files
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Source maps (expose source code in production)
+*.map
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

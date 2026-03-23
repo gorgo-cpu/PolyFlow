@@ -550,8 +550,8 @@ html.lenis body {
 
 .contact-modal__close {
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
+  top: 0.875rem;
+  right: 1rem;
   background: none;
   border: none;
   color: rgba(232, 228, 224, 0.5);
@@ -561,7 +561,9 @@ html.lenis body {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 1.125rem 1rem;
+  min-height: 48px;
+  min-width: 48px;
   transition: color 0.3s ease;
 }
 .contact-modal__close:hover { color: #E8E4E0; }
