@@ -4,6 +4,7 @@ dist/
 *.local
 .env
 .vscode/
+.claude/
 
 # Analysis & documentation artifacts
 ANALYSIS.md

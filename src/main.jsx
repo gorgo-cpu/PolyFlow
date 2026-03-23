@@ -342,8 +342,13 @@ modelLoadedPromise.then(() => {
   // Prep DOM text lines for GSAP animation
   document.querySelectorAll('.split-target').forEach((el) => {
     if (!el.querySelector('.line-wrapper')) {
-      const originalHTML = el.innerHTML;
-      el.innerHTML = `<span class="line-wrapper"><span class="line-inner">${originalHTML}</span></span>`;
+      const wrapper = document.createElement('span');
+      wrapper.className = 'line-wrapper';
+      const inner = document.createElement('span');
+      inner.className = 'line-inner';
+      while (el.firstChild) inner.appendChild(el.firstChild);
+      wrapper.appendChild(inner);
+      el.appendChild(wrapper);
     }
   });
 

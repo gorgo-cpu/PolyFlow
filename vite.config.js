@@ -40,7 +40,7 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       // Only include src/ in the build
       external: (id) => id.includes('resources_from_ThreeJS_Journey'),
