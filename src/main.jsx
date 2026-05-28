@@ -21,6 +21,7 @@ import { stepBlueprintFade } from './animation/blueprintFade.js';
 import { stepCardReveal } from './animation/cardReveal.js';
 
 import { initContactModal } from './ui/contactModal.js';
+import { initMobileMenu } from './ui/mobileMenu.js';
 
 import { CheckpointManager } from './gallery/CheckpointManager.js';
 import { GalleryLabels } from './gallery/GalleryLabels.js';
@@ -50,6 +51,9 @@ attachResize({ camera, renderer, css3dRenderer, composer, bloomPass, filmPass, r
 
 const state = { targetCameraZ: 14, currentCameraZ: 14 };
 attachNativeScroll(state);
+
+// Mobile-only nav overlay. No-op on desktop.
+initMobileMenu(lenis);
 
 const material = createHolographicMaterial();
 

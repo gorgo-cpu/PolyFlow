@@ -296,6 +296,26 @@
     <canvas id="webgl-canvas"></canvas>
     <div id="css3d-container"></div>
 
+    <!-- Mobile-only navigation menu (hidden on desktop via CSS) -->
+    <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="mobile-menu-toggle__label">[ MENU ]</span>
+    </button>
+    <nav id="mobile-menu" class="mobile-menu" aria-hidden="true">
+        <div class="mobile-menu__backdrop" data-mobile-menu-close></div>
+        <div class="mobile-menu__panel" role="dialog" aria-modal="true" aria-label="Site navigation">
+            <button class="mobile-menu__close" data-mobile-menu-close aria-label="Close menu">[ × CLOSE ]</button>
+            <span class="mobile-menu__eyebrow">POLYFLOW — NAVIGATION</span>
+            <ul class="mobile-menu__list">
+                <li><a class="mobile-menu__link" href="/about/">[ ABOUT ]</a></li>
+                <li><a class="mobile-menu__link" href="/services/3d-website-design/">[ 3D WEBSITE DESIGN ]</a></li>
+                <li><a class="mobile-menu__link" href="/services/webgl-development/">[ WEBGL DEVELOPMENT ]</a></li>
+                <li><a class="mobile-menu__link" href="/work/polyflow-agency/">[ CASE STUDY ]</a></li>
+                <li><a class="mobile-menu__link" href="/work/polyflow-agency/backstage/">[ BACKSTAGE ]</a></li>
+                <li><a class="mobile-menu__link" href="/contact/">[ CONTACT ]</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <!-- UI Layer -->
     <div class="page-wrapper">
 
