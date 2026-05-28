@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import gsap from 'gsap';
-import { sizes } from './sizes.js';
+import { sizes } from './Sizes.js';
 
 export function createCamera(canvas) {
   const camera = new THREE.PerspectiveCamera(

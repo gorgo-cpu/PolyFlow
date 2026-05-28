@@ -3,9 +3,9 @@ import * as THREE from 'three';
 
 import { isMobile } from './utils/device.js';
 import { initScrollGuards, createLenis, attachNativeScroll } from './animation/scroll.js';
-import { sizes, attachResize } from './core/sizes.js';
-import { createRenderer, createCSS3DRenderer } from './core/renderer.js';
-import { createCamera, attachPointerSnapBack } from './core/camera.js';
+import { sizes, attachResize } from './core/Sizes.js';
+import { createRenderer, createCSS3DRenderer } from './core/Renderer.js';
+import { createCamera, attachPointerSnapBack } from './core/Camera.js';
 import { createComposer } from './core/composer.js';
 import { createLoadingManager, playSignatureAnimation, dismissLoader } from './core/loader.js';
 

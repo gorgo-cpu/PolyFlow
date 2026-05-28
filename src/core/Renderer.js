@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
-import { sizes } from './sizes.js';
+import { sizes } from './Sizes.js';
 
 export function createRenderer(canvas) {
   const renderer = new THREE.WebGLRenderer({

@@ -6,7 +6,7 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { RGBShiftShader } from 'three/addons/shaders/RGBShiftShader.js';
 import { FilmPass } from 'three/addons/postprocessing/FilmPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-import { sizes } from './sizes.js';
+import { sizes } from './Sizes.js';
 
 export function createComposer({ renderer, scene, camera, isMobile }) {
   const renderTarget = new THREE.WebGLRenderTarget(sizes.width, sizes.height, {
