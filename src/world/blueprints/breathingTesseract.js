@@ -3,7 +3,7 @@ import { BLUEPRINT_COLOR } from './constants.js';
 
 // i=5: Dynamic breathing tesseract — morphs between sphere/cube and projects 4D->3D with a wBreathe wobble.
 export function createBreathingTesseract(scene, { xPos, zPos, isMobile }) {
-  const breathCount = isMobile ? 150 : 450; // Reduced from 1500 — fewer particles reveals the breathing shape
+  const breathCount = isMobile ? 60 : 450; // Mobile cut to 60 — each particle costs ~6 trig calls + 4D projection per frame
   const breathPositions = [];
   const breathTarget = new THREE.Vector3();
   const breathColor = new THREE.Color();

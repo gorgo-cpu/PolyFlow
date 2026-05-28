@@ -98,6 +98,9 @@ modelLoadedPromise.then(dismissLoader);
 
 const clock = new THREE.Clock();
 
+let _cssVisible = false;
+let _cssVisCheckZ = Number.NEGATIVE_INFINITY;
+
 const tick = () => {
   // getDelta() must come first — getElapsedTime() calls it internally and would reset the timer
   const delta = Math.min(clock.getDelta(), 0.05); // clamp prevents huge jump on tab re-focus
@@ -138,12 +141,17 @@ const tick = () => {
   if (controls) controls.update();
   composer.render();
 
-  // Only composite the CSS3D layer when at least one card is within view range
-  const anyCSSVisible = cssObjects.some(card => {
-    const dist = state.currentCameraZ - card.z;
-    return dist > -15 && dist < 200;
-  });
-  if (anyCSSVisible) css3dRenderer.render(scene, camera);
+  // Only composite the CSS3D layer when at least one card is within view range.
+  // Recompute the visibility set only when the camera Z has actually moved.
+  if (Math.abs(state.currentCameraZ - _cssVisCheckZ) > 2) {
+    _cssVisCheckZ = state.currentCameraZ;
+    _cssVisible = false;
+    for (let i = 0; i < cssObjects.length; i++) {
+      const dist = state.currentCameraZ - cssObjects[i].z;
+      if (dist > -15 && dist < 200) { _cssVisible = true; break; }
+    }
+  }
+  if (_cssVisible) css3dRenderer.render(scene, camera);
 
   window.requestAnimationFrame(tick);
 };

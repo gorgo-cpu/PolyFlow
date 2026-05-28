@@ -4,7 +4,7 @@ import { BLUEPRINT_COLOR } from './constants.js';
 // i=6: Dynamic fire swarm — cylindrical flame with swirl + turbulence + rising wrap.
 // 100-unit occlusion range (wider than the tesseracts) because the column is tall.
 export function createFireSwarm(scene, { xPos, zPos, isMobile }) {
-  const fireCount = isMobile ? 200 : 2000; // Reduced from 10000
+  const fireCount = isMobile ? 80 : 2000; // Reduced from 10000; mobile A16 chokes above ~100 swirl particles
   const firePositions = [];
   const fireTarget = new THREE.Vector3();
   const fireColor = new THREE.Color();
@@ -28,7 +28,7 @@ export function createFireSwarm(scene, { xPos, zPos, isMobile }) {
   scene.add(fireMesh);
 
   function update(elapsedTime, currentCameraZ) {
-    if (Math.abs(currentCameraZ - fireMesh.position.z) >= 100) return;
+    if (Math.abs(currentCameraZ - fireMesh.position.z) >= 70) return;
 
     const scale = 12.0;
     const twist = 5.0;

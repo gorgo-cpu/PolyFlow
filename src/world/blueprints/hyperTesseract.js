@@ -5,7 +5,7 @@ import { BLUEPRINT_COLOR } from './constants.js';
 // i=3: Dynamic 4D hyper-tesseract with Lorenz-attractor bias + breathing pulse.
 // Spatial occlusion guard inside update() prevents CPU exhaustion when off-camera.
 export function createHyperTesseract(scene, { xPos, zPos, isMobile }) {
-  const tessCount = isMobile ? 150 : 500; // Reduced from 2000 — fewer particles reveals the 4D structure
+  const tessCount = isMobile ? 60 : 500; // Mobile cut to 60 — each particle costs ~8 trig calls + Lorenz step per frame
   const tessPositions = [];
   const tessTarget = new THREE.Vector3();
   const tessColor = new THREE.Color();

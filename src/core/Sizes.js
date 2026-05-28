@@ -1,34 +1,62 @@
+import { getIsMobile } from '../utils/device.js';
+
+function readViewport() {
+  // visualViewport reflects the area NOT covered by iOS Safari's address bar / keyboard.
+  // Fall back to window dimensions for non-supporting browsers.
+  const vv = window.visualViewport;
+  return {
+    width: vv ? Math.round(vv.width) : window.innerWidth,
+    height: vv ? Math.round(vv.height) : window.innerHeight,
+  };
+}
+
+const initial = readViewport();
 export const sizes = {
-  width: window.innerWidth,
-  height: window.innerHeight,
+  width: initial.width,
+  height: initial.height,
 };
 
 export function attachResize({ camera, renderer, css3dRenderer, composer, bloomPass, filmPass, rgbShiftPass }) {
-  window.addEventListener('resize', () => {
-    sizes.width = window.innerWidth;
-    sizes.height = window.innerHeight;
+  let rafScheduled = false;
 
-    camera.aspect = sizes.width / sizes.height;
+  const apply = () => {
+    rafScheduled = false;
+
+    const { width, height } = readViewport();
+    sizes.width = width;
+    sizes.height = height;
+
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
 
-    // Crucial iOS fix: dynamically protect pixel ratio during Safari URL bar shifts
-    const nowMobile = window.innerWidth <= 768;
+    const nowMobile = getIsMobile();
     const targetPixelRatio = nowMobile ? 1 : Math.min(window.devicePixelRatio, 2);
 
-    renderer.setSize(sizes.width, sizes.height);
+    renderer.setSize(width, height);
     renderer.setPixelRatio(targetPixelRatio);
 
-    css3dRenderer.setSize(sizes.width, sizes.height);
+    css3dRenderer.setSize(width, height);
 
-    composer.setSize(sizes.width, sizes.height);
+    composer.setSize(width, height);
     composer.setPixelRatio(targetPixelRatio);
 
-    // Reactively toggle expensive passes based on current breakpoint (handles orientation change)
     filmPass.enabled = !nowMobile;
     rgbShiftPass.enabled = !nowMobile;
     bloomPass.resolution.set(
-      nowMobile ? sizes.width / 2 : sizes.width,
-      nowMobile ? sizes.height / 2 : sizes.height
+      nowMobile ? width / 2 : width,
+      nowMobile ? height / 2 : height
     );
-  });
+  };
+
+  const schedule = () => {
+    if (rafScheduled) return;
+    rafScheduled = true;
+    requestAnimationFrame(apply);
+  };
+
+  window.addEventListener('resize', schedule);
+  window.addEventListener('orientationchange', schedule);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', schedule);
+  }
 }
