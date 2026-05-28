@@ -77,7 +77,14 @@ html.lenis body {
   position: relative;
   z-index: 1;
   pointer-events: none;
+  /* Hidden until JS re-parents these sections into the CSS3D overlay — */
+  /* prevents the raw HTML stack of all four cards from flashing on initial load. */
+  visibility: hidden;
   /* Let clicks pass through to canvas when clicking empty space */
+}
+
+.page-wrapper.is-mounted {
+  visibility: visible;
 }
 
 /* UI Sections & Grid */
@@ -1021,18 +1028,12 @@ html.lenis body {
 
 @media (max-width: 768px) {
   /* Anchor the arrows to the bottom edge so they no longer overlap card text */
-  .gallery-nav {
-    font-size: 0.85rem;
-    padding: 1rem 1.2rem;
-    letter-spacing: 0.14em;
-    min-height: 48px;
-    min-width: 48px;
-    top: auto;
-    bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
-    transform: none;
+  /* Mobile: gallery side-explore arrows are removed entirely (desktop-only feature). */
+  .gallery-nav,
+  .gallery-nav--prev,
+  .gallery-nav--next {
+    display: none !important;
   }
-  .gallery-nav--prev { left: 0.9rem; }
-  .gallery-nav--next { right: 0.9rem; }
 
   #webgl-canvas.is-blurred { filter: none; }
   .content-overlay__backdrop { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(6, 6, 6, 0.97); }

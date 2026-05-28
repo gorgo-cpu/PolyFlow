@@ -19,39 +19,29 @@ export class GalleryNavigation {
     this.camera = camera;
     this.isMobile = isMobile;
 
-    // Current orbit angle in radians: 0 = forward, -HALF_PI = left, +HALF_PI = right
+    // Current orbit angle in radians: 0 = forward, -HALF_PI = left, +HALF_PI = right.
+    // Kept at 0 on mobile because the side-explore feature is desktop-only.
     this.orbitAngle = 0;
-    // Target angle (for state tracking)
     this._targetAngle = 0;
     this.isNavigating = false;
+    this._tween = null;
 
-    // DOM refs
+    // Mobile path: no DOM bindings, no per-frame work. update() becomes a no-op.
+    if (this.isMobile) {
+      this._disabled = true;
+      return;
+    }
+
     this.prevBtn = document.querySelector('.gallery-nav--prev');
     this.nextBtn = document.querySelector('.gallery-nav--next');
 
-    // Bind
     this._onLeft = this._onLeft.bind(this);
     this._onRight = this._onRight.bind(this);
     this._onKeyDown = this._onKeyDown.bind(this);
 
-    // Desktop: arrow buttons
     this.prevBtn.addEventListener('click', this._onLeft);
     this.nextBtn.addEventListener('click', this._onRight);
-
-    // Keyboard
     document.addEventListener('keydown', this._onKeyDown);
-
-    // Mobile: swipe
-    if (this.isMobile) {
-      this._touchStartX = 0;
-      this._touchStartY = 0;
-      this._onTouchStart = this._onTouchStart.bind(this);
-      this._onTouchEnd = this._onTouchEnd.bind(this);
-      document.addEventListener('touchstart', this._onTouchStart, { passive: true });
-      document.addEventListener('touchend', this._onTouchEnd, { passive: true });
-    }
-
-    this._tween = null;
   }
 
   _onLeft() {
@@ -122,34 +112,11 @@ export class GalleryNavigation {
     this._orbitTo(0);
   }
 
-  // Mobile swipe
-  _onTouchStart(e) {
-    if (e.touches.length !== 1) return;
-    this._touchStartX = e.touches[0].clientX;
-    this._touchStartY = e.touches[0].clientY;
-  }
-
-  _onTouchEnd(e) {
-    if (this.checkpointManager.isOverlayOpen) return;
-    if (!this.checkpointManager.isNearCheckpoint) return;
-
-    const touch = e.changedTouches[0];
-    const dx = touch.clientX - this._touchStartX;
-    const dy = touch.clientY - this._touchStartY;
-
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      if (dx > 0) {
-        this._onLeft();
-      } else {
-        this._onRight();
-      }
-    }
-  }
-
   /**
    * Called every frame. Shows/hides nav arrows based on proximity and orbit state.
    */
   update() {
+    if (this._disabled) return;
     const near = this.checkpointManager.isNearCheckpoint && !this.checkpointManager.isOverlayOpen;
 
     if (!near) {
@@ -187,13 +154,10 @@ export class GalleryNavigation {
   }
 
   dispose() {
+    if (this._tween) this._tween.kill();
+    if (this._disabled) return;
     this.prevBtn.removeEventListener('click', this._onLeft);
     this.nextBtn.removeEventListener('click', this._onRight);
     document.removeEventListener('keydown', this._onKeyDown);
-    if (this.isMobile) {
-      document.removeEventListener('touchstart', this._onTouchStart);
-      document.removeEventListener('touchend', this._onTouchEnd);
-    }
-    if (this._tween) this._tween.kill();
   }
 }

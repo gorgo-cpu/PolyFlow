@@ -134,8 +134,10 @@ const tick = () => {
     checkpointManager.update(state.currentCameraZ);
     if (checkpointManager.isGalleryActive) {
       if (galleryLabels) galleryLabels.update(state.currentCameraZ);
-      if (galleryNavigation) galleryNavigation.update();
     }
+    // Always tick the nav: its update() removes the is-visible class when
+    // isNearCheckpoint goes false (scrolled back past the gallery zone).
+    if (galleryNavigation) galleryNavigation.update();
   }
 
   if (controls) controls.update();

@@ -41,5 +41,9 @@ export function createContentCards(scene, openContactModal) {
     });
   });
 
+  // Reveal the wrapper now that CSS3D has reparented every section into its overlay layer.
+  // Done after the loop so all four sections are detached from .page-wrapper before it becomes visible.
+  document.querySelector('.page-wrapper')?.classList.add('is-mounted');
+
   return cssObjects;
 }
