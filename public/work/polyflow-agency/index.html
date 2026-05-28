@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Case Study: Polyflow Agency Website — 3D Scroll Experience</title>
+    <meta name="description" content="How Polyflow built its own agency website as a scroll-driven 3D experience using Three.js, custom GLSL shaders, and GSAP. 60 FPS on mobile, under 2MB total.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://polyflow.agency/work/polyflow-agency/">
+
+    <meta property="og:title" content="Case Study: Polyflow Agency Website">
+    <meta property="og:description" content="Scroll-driven 3D agency website built with Three.js, custom shaders, and GSAP. 60 FPS guaranteed.">
+    <meta property="og:image" content="https://polyflow.agency/og/default.jpg">
+    <meta property="og:url" content="https://polyflow.agency/work/polyflow-agency/">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Polyflow">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Case Study: Polyflow Agency Website">
+    <meta name="twitter:description" content="Scroll-driven 3D agency website built with Three.js, custom shaders, and GSAP. 60 FPS guaranteed.">
+    <meta name="twitter:image" content="https://polyflow.agency/og/default.jpg">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <style>
+        @font-face {
+            font-family: 'Outfit';
+            font-style: normal;
+            font-weight: 400 700;
+            font-display: swap;
+            src: url('/fonts/outfit-latin.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Playfair Display';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: url('/fonts/playfair-italic-latin.woff2') format('woff2');
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #0A0A0A; color: #E8E4E0;
+            font-family: 'Outfit', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased; line-height: 1.7; font-size: 16px;
+        }
+        .page { max-width: 720px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+        .breadcrumb {
+            font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.4); margin-bottom: 3rem;
+        }
+        .breadcrumb a { color: rgba(232, 228, 224, 0.6); text-decoration: none; transition: color 0.3s ease; }
+        .breadcrumb a:hover { color: #E8E4E0; }
+        .section-label {
+            display: block; font-size: 0.7rem; letter-spacing: 0.2em;
+            text-transform: uppercase; color: rgba(232, 228, 224, 0.35); margin-bottom: 1.5rem;
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600; letter-spacing: -0.03em; margin-bottom: 0.75rem;
+        }
+        .subtitle {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic; font-size: 1.15rem;
+            color: rgba(232, 228, 224, 0.6); margin-bottom: 3rem;
+        }
+        h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; margin-top: 3rem; margin-bottom: 1rem; }
+        p { color: rgba(232, 228, 224, 0.75); margin-bottom: 1rem; }
+        ul { color: rgba(232, 228, 224, 0.75); margin-bottom: 1rem; padding-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        strong { color: #E8E4E0; font-weight: 600; }
+        a { color: #E8E4E0; text-decoration: underline; text-underline-offset: 3px; transition: opacity 0.3s ease; }
+        a:hover { opacity: 0.7; }
+        .divider { border: none; border-top: 1px solid rgba(232, 228, 224, 0.1); margin: 3rem 0; }
+        .meta-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin: 2rem 0;
+            padding: 2rem; border: 1px solid rgba(232, 228, 224, 0.08); border-radius: 4px;
+        }
+        @media (max-width: 600px) { .meta-grid { grid-template-columns: 1fr; gap: 1rem; } }
+        .meta-item-label {
+            display: block; font-size: 0.65rem; letter-spacing: 0.2em;
+            text-transform: uppercase; color: rgba(232, 228, 224, 0.35); margin-bottom: 0.25rem;
+        }
+        .meta-item-value { font-size: 0.95rem; color: #E8E4E0; }
+        code {
+            font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85em;
+            background: rgba(232, 228, 224, 0.08); padding: 0.15em 0.4em;
+            border-radius: 3px; color: #E8E4E0;
+        }
+        .cta-link {
+            display: inline-block; margin-top: 2rem; padding: 1rem 2rem;
+            font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+            text-decoration: none; border: 1px solid rgba(232, 228, 224, 0.3);
+            color: #E8E4E0; transition: all 0.4s ease;
+        }
+        .cta-link:hover { background: rgba(232, 228, 224, 0.05); border-color: rgba(232, 228, 224, 0.6); opacity: 1; }
+        .internal-links { margin-top: 3rem; }
+        .internal-links a {
+            display: inline-block; margin-right: 1.5rem; margin-bottom: 0.5rem;
+            font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.5); text-decoration: none;
+        }
+        .internal-links a:hover { color: #E8E4E0; opacity: 1; }
+        .footer-stamp {
+            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.25); margin-top: 4rem; text-align: center;
+        }
+    </style>
+
+    <!-- Schema: Article + CreativeWork -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Case Study: Polyflow Agency Website — Scroll-Driven 3D Experience",
+        "description": "How Polyflow built its own agency website as a scroll-driven 3D corridor using Three.js, custom GLSL shaders, CSS3D rendering, and GSAP ScrollTrigger.",
+        "author": {
+            "@type": "Person",
+            "name": "George Constantin"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "@id": "https://polyflow.agency/#organization"
+        },
+        "datePublished": "2026-03-25",
+        "dateModified": "2026-03-25",
+        "mainEntityOfPage": "https://polyflow.agency/work/polyflow-agency/",
+        "image": "https://polyflow.agency/og/default.jpg",
+        "about": {
+            "@type": "CreativeWork",
+            "name": "Polyflow Agency Website",
+            "creator": {
+                "@type": "Organization",
+                "@id": "https://polyflow.agency/#organization"
+            },
+            "url": "https://polyflow.agency"
+        }
+    }
+    </script>
+
+    <!-- Schema: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyflow.agency/" },
+            { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://polyflow.agency/work/" },
+            { "@type": "ListItem", "position": 3, "name": "Polyflow Agency", "item": "https://polyflow.agency/work/polyflow-agency/" }
+        ]
+    }
+    </script>
+</head>
+
+<body>
+    <main class="page">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Polyflow</a> / <a href="/work/polyflow-agency/">Work</a> / Polyflow Agency
+        </nav>
+
+        <span class="section-label">Case Study</span>
+        <h1>Polyflow Agency Website</h1>
+        <p class="subtitle">A scroll-driven corridor through the third dimension.</p>
+
+        <div class="meta-grid">
+            <div>
+                <span class="meta-item-label">Client</span>
+                <span class="meta-item-value">Polyflow (Self)</span>
+            </div>
+            <div>
+                <span class="meta-item-label">Timeline</span>
+                <span class="meta-item-value">3 Weeks</span>
+            </div>
+            <div>
+                <span class="meta-item-label">Stack</span>
+                <span class="meta-item-value">Three.js / GSAP / Lenis</span>
+            </div>
+        </div>
+
+        <h2>The Brief</h2>
+
+        <p>Built as the studio's founding demonstration: if we can't prove the concept on ourselves, we have no business selling it to anyone else. Polyflow needed a website that worked as proof, not description. Most studios describe what they do. Polyflow had to demonstrate it, in real time, inside the browser. The site itself had to be the portfolio piece. A spatial experience that loads fast, holds 60 FPS on mobile, and states the studio's positioning without a single stock photo or template component.</p>
+
+        <p>The constraint was deliberate. Build the most technically ambitious agency website possible, keep total page weight under 2MB, and hold buttery performance on a mid-range iPhone.</p>
+
+        <h2>The Concept</h2>
+
+        <p>The site is built as a scroll-driven corridor. The visitor's scroll drives a camera moving through 3D space along the Z-axis, passing through four narrative states. Each state is a glass-morphism content panel floating in the spatial environment.</p>
+
+        <p>The metaphor mirrors the studio's positioning. You do not read this website, you move through it. The scroll is the vehicle. The content reveals itself spatially.</p>
+
+        <h2>Technical Architecture</h2>
+
+        <p>The experience is built from three rendering layers, composited into one seamless frame:</p>
+
+        <ul>
+            <li><strong>The spatial layer.</strong> The scene the visitor moves through. The holographic sphere, the wireframe blueprint objects, and the particle fields suspended in depth.</li>
+            <li><strong>The text layer.</strong> Content placed in 3D space and aligned to the camera path, so type stays razor-sharp at any point in the corridor.</li>
+            <li><strong>The interface layer.</strong> The glass-lens panels and interactive elements, positioned over the scene with scroll handled cleanly between them.</li>
+        </ul>
+
+        <p>The scroll itself drives a weighted camera. Rather than snapping to position, the camera eases through the corridor, giving every movement the momentum of travelling through a physical space. The hard part is not building the layers. It is making all three agree on depth and timing, frame after frame, without a seam the visitor can find.</p>
+
+        <h2>The Holographic Sphere</h2>
+
+        <p>The central element is a custom-shaded sphere. Its surface is hand-written for this project, not pulled from a material library, with animated light drifting across it in a slow, continuous pass. The effect reads as holographic, engineered, and alive.</p>
+
+        <p>This is the line between a spatial website and a templated one. A library material gives every brand the same surface. Bespoke shading gives one brand a surface no competitor can reproduce.</p>
+
+        <h2>Blueprint Objects</h2>
+
+        <p>Eight wireframe objects float along the corridor, each built from fields of individual particles rather than solid geometry. They range from a Fibonacci sphere and a cubic lattice to a torus knot and an animated hyper-tesseract that morphs between four-dimensional projection states.</p>
+
+        <p>Particle density adapts to the device, scaling down on mobile so the corridor holds its frame rate on a phone as confidently as on a laptop. Every object is drawn efficiently enough to keep thousands of particles within a tight render budget.</p>
+
+        <h2>The Finishing Layer</h2>
+
+        <p>A post-processing layer gives the corridor its cinematic register. A soft bloom lifts the holographic sphere and the brightest particles. A trace of film grain adds analog texture. A whisper of chromatic aberration sharpens the sense of depth.</p>
+
+        <p>On mobile, the heaviest effects step aside and the rest are tuned down, keeping the GPU budget well within reach of a phone. The visitor keeps the atmosphere. The device keeps its frame rate.</p>
+
+        <h2>Performance Results</h2>
+
+        <ul>
+            <li><strong>60 FPS</strong> sustained on an iPhone running iOS Safari and on a MacBook Air.</li>
+            <li><strong>Total page weight under 1.8MB</strong>, lighter than most flat, image-heavy websites.</li>
+            <li><strong>Stable memory</strong> across the full corridor, with no leaks and no growth on repeated navigation.</li>
+            <li><strong>No frame drops</strong> under load, on desktop or mobile, from the first scroll to the last.</li>
+        </ul>
+
+        <hr class="divider">
+
+        <a href="/work/polyflow-agency/backstage/" class="cta-link">[ Read the Technical Backstage ]</a>
+
+        <nav class="internal-links">
+            <a href="/services/3d-website-design/">Our Services</a>
+            <a href="/contact/">Contact</a>
+            <a href="/about/">About</a>
+            <a href="/">Home</a>
+        </nav>
+
+        <p class="footer-stamp">Polyflow — Bucharest — MMXXVI</p>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,45 @@
+# Polyflow — Spatial Engineering Studio
+
+Polyflow is a spatial engineering studio in Bucharest, Romania, specializing in premium 3D website design, WebGL development, and immersive digital experiences.
+
+## What We Do
+
+Polyflow designs and builds high-performance 3D websites using Three.js, WebGL, custom GLSL shaders, and GSAP animation. Every project targets 60 FPS on mobile devices including iOS Safari. We call our projects Digital Landmarks — immersive web experiences that function as brand assets, not just websites.
+
+## Services
+
+- **3D Website Design**: Premium spatial websites built with Three.js and WebGL. Scroll-driven camera animation, custom shaders, post-processing.
+- **WebGL Development**: Custom WebGL/Three.js development for agencies and brands. Performance-first architecture targeting 60 FPS on all devices.
+- **Immersive Web Experiences**: Full-scope immersive digital experiences for luxury and premium brands. Spatial storytelling, interactive 3D, scroll-driven narrative.
+
+## Technical Stack
+
+- Three.js / WebGL / WebGPU
+- Custom GLSL vertex and fragment shaders
+- GSAP + ScrollTrigger for scroll-driven animation
+- Lenis for smooth scrolling
+- Vite for build tooling
+- Vercel for deployment
+
+## Key Differentiators
+
+- 60 FPS guaranteed on mobile (iOS Safari) and desktop
+- Custom shader development (not template-based)
+- Scroll-driven 3D camera choreography as a core competency
+- Computer science-first approach to web performance
+- Bucharest-based with European and global client reach
+
+## Founder
+
+George Constantin — spatial engineer and founder of Polyflow. Based in Bucharest, Romania.
+
+## Contact
+
+- Website: https://polyflow.agency
+- Email: clients.polyflow@gmail.com
+- Phone: +40 773 388 205
+- Location: Bucharest, Romania
+
+## Pricing
+
+Projects start at €5,000. Typical range €5,000–€15,000+ depending on scope and complexity. Monthly maintenance available post-delivery.

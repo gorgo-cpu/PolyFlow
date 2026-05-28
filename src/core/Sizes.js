@@ -1,33 +1,34 @@
-import EventEmitter from '../utils/Helpers.js';
+export const sizes = {
+  width: window.innerWidth,
+  height: window.innerHeight,
+};
 
-/**
- * Sizes
- * ─────
- * Tracks viewport dimensions and pixel ratio.
- * Emits 'resize' events so subsystems can react.
- *
- * Usage:
- *   sizes.on('resize', () => { ... });
- *   sizes.width   // current viewport width
- *   sizes.height  // current viewport height
- */
+export function attachResize({ camera, renderer, css3dRenderer, composer, bloomPass, filmPass, rgbShiftPass }) {
+  window.addEventListener('resize', () => {
+    sizes.width = window.innerWidth;
+    sizes.height = window.innerHeight;
 
-export class Sizes extends EventEmitter {
-  constructor() {
-    super();
+    camera.aspect = sizes.width / sizes.height;
+    camera.updateProjectionMatrix();
 
-    // Initial values
-    this.width = window.innerWidth;
-    this.height = window.innerHeight;
-    this.pixelRatio = Math.min(window.devicePixelRatio, 2);
+    // Crucial iOS fix: dynamically protect pixel ratio during Safari URL bar shifts
+    const nowMobile = window.innerWidth <= 768;
+    const targetPixelRatio = nowMobile ? 1 : Math.min(window.devicePixelRatio, 2);
 
-    // Listen for resize
-    window.addEventListener('resize', () => {
-      this.width = window.innerWidth;
-      this.height = window.innerHeight;
-      this.pixelRatio = Math.min(window.devicePixelRatio, 2);
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(targetPixelRatio);
 
-      this.trigger('resize');
-    });
-  }
+    css3dRenderer.setSize(sizes.width, sizes.height);
+
+    composer.setSize(sizes.width, sizes.height);
+    composer.setPixelRatio(targetPixelRatio);
+
+    // Reactively toggle expensive passes based on current breakpoint (handles orientation change)
+    filmPass.enabled = !nowMobile;
+    rgbShiftPass.enabled = !nowMobile;
+    bloomPass.resolution.set(
+      nowMobile ? sizes.width / 2 : sizes.width,
+      nowMobile ? sizes.height / 2 : sizes.height
+    );
+  });
 }

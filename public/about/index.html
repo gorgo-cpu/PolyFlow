@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About George Constantin — Polyflow Spatial Engineering Studio</title>
+    <meta name="description" content="George Constantin is the founder of Polyflow, a spatial engineering studio in Bucharest building premium 3D websites with Three.js, WebGL, and custom GLSL shaders.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://polyflow.agency/about/">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="About George Constantin — Polyflow">
+    <meta property="og:description" content="Founder of Polyflow. Spatial engineer building premium 3D web experiences from Bucharest.">
+    <meta property="og:image" content="https://polyflow.agency/og/default.jpg">
+    <meta property="og:url" content="https://polyflow.agency/about/">
+    <meta property="og:type" content="profile">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Polyflow">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About George Constantin — Polyflow">
+    <meta name="twitter:description" content="Founder of Polyflow. Spatial engineer building premium 3D web experiences from Bucharest.">
+    <meta name="twitter:image" content="https://polyflow.agency/og/default.jpg">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <style>
+        @font-face {
+            font-family: 'Outfit';
+            font-style: normal;
+            font-weight: 400 700;
+            font-display: swap;
+            src: url('/fonts/outfit-latin.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Playfair Display';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: url('/fonts/playfair-italic-latin.woff2') format('woff2');
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #0A0A0A;
+            color: #E8E4E0;
+            font-family: 'Outfit', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+        .page { max-width: 720px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+        .breadcrumb {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.4);
+            margin-bottom: 3rem;
+        }
+        .breadcrumb a {
+            color: rgba(232, 228, 224, 0.6);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .breadcrumb a:hover { color: #E8E4E0; }
+        .section-label {
+            display: block;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.35);
+            margin-bottom: 1.5rem;
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+        }
+        .subtitle {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: 1.15rem;
+            color: rgba(232, 228, 224, 0.6);
+            margin-bottom: 3rem;
+        }
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+        }
+        p { color: rgba(232, 228, 224, 0.75); margin-bottom: 1rem; }
+        ul { color: rgba(232, 228, 224, 0.75); margin-bottom: 1rem; padding-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        strong { color: #E8E4E0; font-weight: 600; }
+        a { color: #E8E4E0; text-decoration: underline; text-underline-offset: 3px; transition: opacity 0.3s ease; }
+        a:hover { opacity: 0.7; }
+        .divider { border: none; border-top: 1px solid rgba(232, 228, 224, 0.1); margin: 3rem 0; }
+        .cta-link {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 1px solid rgba(232, 228, 224, 0.3);
+            color: #E8E4E0;
+            transition: all 0.4s ease;
+        }
+        .cta-link:hover { background: rgba(232, 228, 224, 0.05); border-color: rgba(232, 228, 224, 0.6); opacity: 1; }
+        .internal-links { margin-top: 3rem; }
+        .internal-links a {
+            display: inline-block;
+            margin-right: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.5);
+            text-decoration: none;
+        }
+        .internal-links a:hover { color: #E8E4E0; opacity: 1; }
+        .footer-stamp {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.25);
+            margin-top: 4rem;
+            text-align: center;
+        }
+    </style>
+
+    <!-- Schema: Person -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "mainEntity": {
+            "@type": "Person",
+            "name": "George Constantin",
+            "jobTitle": "Spatial Engineer & Founder",
+            "worksFor": {
+                "@type": "Organization",
+                "@id": "https://polyflow.agency/#organization",
+                "name": "Polyflow"
+            },
+            "knowsAbout": [
+                "Three.js",
+                "WebGL",
+                "GLSL Shaders",
+                "3D Web Development",
+                "GSAP Animation",
+                "Web Performance Optimization",
+                "React Three Fiber",
+                "Spatial Design"
+            ],
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Bucharest",
+                "addressCountry": "RO"
+            }
+        }
+    }
+    </script>
+
+    <!-- Schema: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyflow.agency/" },
+            { "@type": "ListItem", "position": 2, "name": "About", "item": "https://polyflow.agency/about/" }
+        ]
+    }
+    </script>
+</head>
+
+<body>
+    <main class="page">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Polyflow</a> / About
+        </nav>
+
+        <span class="section-label">The Founder</span>
+        <h1>George Constantin</h1>
+        <p class="subtitle">Spatial engineer. Founder of Polyflow.</p>
+
+        <p>Polyflow began with a single conviction. The web has a third dimension, and most studios pretend it doesn't exist. Between the flat layouts the industry settled for and the spatial work browsers can already render, there is open ground. A foundation waiting to be built on.</p>
+
+        <p>That ground is where Polyflow stands. Est. 2023 in Bucharest, Romania, the studio crafts permanent spatial assets for ambitious brands, luxury maisons, and high-growth tech firms across Europe. Three commitments anchor every project. Depth as brand equity. Performance as foundation. Craft as the visible signature.</p>
+
+        <h2>Background</h2>
+
+        <p>George's path to spatial engineering started in computer science. Algorithms, data structures, GPU architecture. The creative layer came after, never instead. The approach is engineering-first. Understand the hardware, then shape the experience inside its weight. Work that reads as ambitious because it is engineered to be permanent.</p>
+
+        <p>Core disciplines span the full spatial pipeline:</p>
+        <ul>
+            <li><strong>Scene architecture.</strong> Scene graph design, camera systems, and render pipelines built to scale.</li>
+            <li><strong>Custom shading.</strong> Hand-written vertex and fragment programs for effects no library can deliver.</li>
+            <li><strong>Scroll choreography.</strong> Scroll-driven camera sequences and frame-perfect timeline composition.</li>
+            <li><strong>Performance engineering.</strong> Draw call budgets, instanced rendering, and mobile GPU discipline.</li>
+            <li><strong>Component architecture.</strong> Modular spatial systems for projects where structure matters as much as visuals.</li>
+        </ul>
+
+        <h2>The Polyflow Method</h2>
+
+        <p>Most studios sell creative websites. Polyflow builds Digital Landmarks. The distinction matters because 3D on the web carries a reputation. Slow loads, broken mobile, fans spinning. Polyflow exists to retire that reputation, one project at a time.</p>
+
+        <p>The method rests on three principles:</p>
+        <ul>
+            <li><strong>Precision over volume.</strong> One project crafted exceptionally outweighs five delivered adequately. Each engagement receives the full depth of the studio's attention.</li>
+            <li><strong>Performance as foundation.</strong> 60 FPS on iOS Safari is the baseline, never the ambition. Every build ships with an engineered mobile path.</li>
+            <li><strong>Technology in service of narrative.</strong> Spatial depth exists to elevate the story. When a flat section communicates better, it stays flat.</li>
+        </ul>
+
+        <h2>Location</h2>
+
+        <p>Polyflow is based in Bucharest, Romania, and works with founders, brands, and studios across Europe and globally. The EET / EEST timezone overlaps the full European business day and the US East Coast morning. General inquiries land at hello@polyflow.ro. New business goes to projects@polyflow.ro.</p>
+
+        <hr class="divider">
+
+        <a href="/contact/" class="cta-link">[ Begin the conversation ]</a>
+
+        <nav class="internal-links">
+            <a href="/services/3d-website-design/">3D Website Design</a>
+            <a href="/services/webgl-development/">WebGL Development</a>
+            <a href="/work/polyflow-agency/">Case Studies</a>
+            <a href="/">Home</a>
+        </nav>
+
+        <p class="footer-stamp">Polyflow — Bucharest — MMXXVI</p>
+    </main>
+</body>
+
+</html>

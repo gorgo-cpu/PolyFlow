@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WebGL Development Agency | Three.js Development Services — Polyflow</title>
+    <meta name="description" content="Custom WebGL and Three.js development from Polyflow. Performance-first 3D web applications, custom GLSL shaders, and interactive visualizations. Bucharest, Europe.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://polyflow.agency/services/webgl-development/">
+
+    <meta property="og:title" content="WebGL & Three.js Development Services — Polyflow">
+    <meta property="og:description" content="Custom WebGL development, Three.js applications, and GLSL shader programming. Performance-first.">
+    <meta property="og:image" content="https://polyflow.agency/og/default.jpg">
+    <meta property="og:url" content="https://polyflow.agency/services/webgl-development/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Polyflow">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="WebGL & Three.js Development Services — Polyflow">
+    <meta name="twitter:description" content="Custom WebGL development, Three.js applications, and GLSL shader programming. Performance-first.">
+    <meta name="twitter:image" content="https://polyflow.agency/og/default.jpg">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <style>
+        @font-face {
+            font-family: 'Outfit';
+            font-style: normal;
+            font-weight: 400 700;
+            font-display: swap;
+            src: url('/fonts/outfit-latin.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Playfair Display';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: url('/fonts/playfair-italic-latin.woff2') format('woff2');
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #0A0A0A; color: #E8E4E0;
+            font-family: 'Outfit', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased; line-height: 1.7; font-size: 16px;
+        }
+        .page { max-width: 720px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+        .breadcrumb {
+            font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.4); margin-bottom: 3rem;
+        }
+        .breadcrumb a { color: rgba(232, 228, 224, 0.6); text-decoration: none; transition: color 0.3s ease; }
+        .breadcrumb a:hover { color: #E8E4E0; }
+        .section-label {
+            display: block; font-size: 0.7rem; letter-spacing: 0.2em;
+            text-transform: uppercase; color: rgba(232, 228, 224, 0.35); margin-bottom: 1.5rem;
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600; letter-spacing: -0.03em; margin-bottom: 0.75rem;
+        }
+        .subtitle {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic; font-size: 1.15rem;
+            color: rgba(232, 228, 224, 0.6); margin-bottom: 3rem;
+        }
+        h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; margin-top: 3rem; margin-bottom: 1rem; }
+        p { color: rgba(232, 228, 224, 0.75); margin-bottom: 1rem; }
+        ul { color: rgba(232, 228, 224, 0.75); margin-bottom: 1rem; padding-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        strong { color: #E8E4E0; font-weight: 600; }
+        a { color: #E8E4E0; text-decoration: underline; text-underline-offset: 3px; transition: opacity 0.3s ease; }
+        a:hover { opacity: 0.7; }
+        .divider { border: none; border-top: 1px solid rgba(232, 228, 224, 0.1); margin: 3rem 0; }
+        .capability-list { margin: 2rem 0; }
+        .capability {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(232, 228, 224, 0.06);
+        }
+        .capability strong { display: block; margin-bottom: 0.25rem; }
+        .capability p { margin-bottom: 0; font-size: 0.95rem; }
+        code {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.85em;
+            background: rgba(232, 228, 224, 0.08);
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+            color: #E8E4E0;
+        }
+        .cta-link {
+            display: inline-block; margin-top: 2rem; padding: 1rem 2rem;
+            font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+            text-decoration: none; border: 1px solid rgba(232, 228, 224, 0.3);
+            color: #E8E4E0; transition: all 0.4s ease;
+        }
+        .cta-link:hover { background: rgba(232, 228, 224, 0.05); border-color: rgba(232, 228, 224, 0.6); opacity: 1; }
+        .internal-links { margin-top: 3rem; }
+        .internal-links a {
+            display: inline-block; margin-right: 1.5rem; margin-bottom: 0.5rem;
+            font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.5); text-decoration: none;
+        }
+        .internal-links a:hover { color: #E8E4E0; opacity: 1; }
+        .footer-stamp {
+            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.25); margin-top: 4rem; text-align: center;
+        }
+    </style>
+
+    <!-- Schema: Service -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "WebGL & Three.js Development",
+        "description": "Custom WebGL development, Three.js applications, GLSL shader programming, and interactive 3D visualizations. Performance-first architecture targeting 60 FPS on all devices.",
+        "provider": {
+            "@type": "Organization",
+            "@id": "https://polyflow.agency/#organization"
+        },
+        "areaServed": [
+            { "@type": "Country", "name": "Romania" },
+            { "@type": "Continent", "name": "Europe" }
+        ],
+        "serviceType": "WebGL Development",
+        "url": "https://polyflow.agency/services/webgl-development/"
+    }
+    </script>
+
+    <!-- Schema: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyflow.agency/" },
+            { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://polyflow.agency/services/" },
+            { "@type": "ListItem", "position": 3, "name": "WebGL Development", "item": "https://polyflow.agency/services/webgl-development/" }
+        ]
+    }
+    </script>
+</head>
+
+<body>
+    <main class="page">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Polyflow</a> / <a href="/services/3d-website-design/">Services</a> / WebGL Development
+        </nav>
+
+        <span class="section-label">Service</span>
+        <h1>Spatial Engineering &amp; Development</h1>
+        <p class="subtitle">The engineered layer beneath every Digital Landmark.</p>
+
+        <p>Spatial engineering is where ambition meets the hardware. The distance between a 3D experience that elevates a brand and one that frustrates is decided entirely in the engineering. How the render loop is structured, how the shading is tuned, how memory holds across a fleet of devices with very different graphics budgets.</p>
+
+        <p>Polyflow provides bespoke spatial development for studios, brands, and product teams that need depth built correctly the first time. For luxury maisons, high-growth tech firms, and the studios serving them. Three commitments shape every engagement. Engineered structure, refined craft, permanent performance.</p>
+
+        <h2>Development Capabilities</h2>
+
+        <div class="capability-list">
+            <div class="capability">
+                <strong>Spatial Application Architecture</strong>
+                <p>Scene graph design, camera systems, render pipelines, and post-processing composition. Engineered for maintainability, not the demo reel.</p>
+            </div>
+            <div class="capability">
+                <strong>Custom Shading</strong>
+                <p>Vertex and fragment programs written from scratch. Noise fields, signed distance fields, ray marching, procedural texturing. The visual register that no library delivers.</p>
+            </div>
+            <div class="capability">
+                <strong>Scroll-Driven Spatial Animation</strong>
+                <p>Scroll position becomes the master timeline. Camera paths, object motion, and content reveal sequenced together into a single cinematic journey.</p>
+            </div>
+            <div class="capability">
+                <strong>Performance Optimization</strong>
+                <p>Draw call reduction through geometry merging and instancing. Texture atlas compilation. Adaptive quality. Mobile GPU profiling against real device budgets.</p>
+            </div>
+            <div class="capability">
+                <strong>3D Asset Pipeline</strong>
+                <p>Model optimization, mesh compression, texture preparation, environment mapping, and physically based material setup. From source file to refined render.</p>
+            </div>
+            <div class="capability">
+                <strong>GPU-Accelerated Particle Systems</strong>
+                <p>Compute-driven simulations for large-scale particle fields, fluid dynamics, and data-driven visualizations. Engineered to hold their weight on mobile.</p>
+            </div>
+            <div class="capability">
+                <strong>Component-Based Spatial Systems</strong>
+                <p>For projects where structure carries as much weight as visuals, a modular spatial architecture with proper boundaries, lifecycles, and disposal.</p>
+            </div>
+        </div>
+
+        <h2>How We Work With Studios</h2>
+
+        <p>For studios that own the creative direction but require an engineering partner for the spatial layer, Polyflow operates as a specialized development collaborator. You hold the client relationship and the creative vision. We craft the engineered foundation underneath.</p>
+
+        <p>The model works because:</p>
+        <ul>
+            <li>Your design team delivers the vision, the mood, and the interaction language.</li>
+            <li>We translate that into technical specifications with engineered performance budgets.</li>
+            <li>Development moves in weekly sprints with recorded walkthroughs of every milestone.</li>
+            <li>You present polished progress to your client, with Polyflow behind the curtain or on the call as the brief requires.</li>
+        </ul>
+
+        <h2>Performance Standards</h2>
+
+        <p>Every engagement honors the same non-negotiable standards:</p>
+
+        <ul>
+            <li><strong>60 FPS</strong> on iOS Safari and any laptop. Measured, not assumed.</li>
+            <li><strong>Zero per-frame allocations.</strong> Temporary objects pre-allocated and reused.</li>
+            <li><strong>Pixel ratio clamped</strong> to protect retina devices from GPU overload.</li>
+            <li><strong>Instanced rendering</strong> for any scene containing more than ten identical objects.</li>
+            <li><strong>Automatic mobile path.</strong> Reduced particle counts, simplified passes, adapted resolution.</li>
+            <li><strong>Stable memory.</strong> No leaks, proper disposal of geometries, materials, and textures.</li>
+        </ul>
+
+        <p>Optimization is measurement-driven, never guesswork. Draw calls, triangle counts, frame timing, and heap behavior are profiled before any pass is tuned.</p>
+
+        <h2>The Engineered Stack</h2>
+
+        <ul>
+            <li><strong>Spatial framework.</strong> Scene management, render pipeline, and pass composition.</li>
+            <li><strong>Shading layer.</strong> Custom vertex and fragment programs with mobile-first precision defaults.</li>
+            <li><strong>Animation layer.</strong> Frame-perfect timelines and scroll-driven sequencing.</li>
+            <li><strong>Scroll physics.</strong> Engineered smooth scroll integrated with the render ticker.</li>
+            <li><strong>Build pipeline.</strong> Fast development builds with shader and asset loaders configured for craft.</li>
+            <li><strong>Deployment.</strong> Edge-deployed production with CDN, security headers, and edge functions.</li>
+        </ul>
+
+        <h2>Engagement Models</h2>
+
+        <p><strong>Fixed-scope landmark.</strong> Defined deliverables, fixed investment, weekly milestones. Best for full spatial site builds or standalone interactive elevations.</p>
+
+        <p><strong>Embedded engineering.</strong> Polyflow integrates with your team for continuous spatial work. Weekly cadence, shared repositories, async communication. Best for studios with a pipeline of spatial projects.</p>
+
+        <p>Both models begin with a discovery conversation. Scope the technical requirements, set the performance budget, then engineer.</p>
+
+        <hr class="divider">
+
+        <a href="/contact/" class="cta-link">[ Discuss your landmark ]</a>
+
+        <nav class="internal-links">
+            <a href="/services/3d-website-design/">3D Website Design</a>
+            <a href="/work/polyflow-agency/">Case Studies</a>
+            <a href="/about/">About</a>
+            <a href="/">Home</a>
+        </nav>
+
+        <p class="footer-stamp">Polyflow — Bucharest — MMXXVI</p>
+    </main>
+</body>
+
+</html>

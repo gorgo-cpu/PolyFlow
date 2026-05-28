@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>3D Website Design Agency — Polyflow | Bucharest</title>
+    <meta name="description" content="Polyflow designs premium 3D websites using Three.js, WebGL, and custom shaders. 60 FPS guaranteed on mobile. Based in Bucharest, serving brands across Europe.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://polyflow.agency/services/3d-website-design/">
+
+    <meta property="og:title" content="3D Website Design Agency — Polyflow">
+    <meta property="og:description" content="Premium 3D websites built with Three.js and WebGL. 60 FPS guaranteed on every device.">
+    <meta property="og:image" content="https://polyflow.agency/og/default.jpg">
+    <meta property="og:url" content="https://polyflow.agency/services/3d-website-design/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Polyflow">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="3D Website Design Agency — Polyflow">
+    <meta name="twitter:description" content="Premium 3D websites built with Three.js and WebGL. 60 FPS guaranteed on every device.">
+    <meta name="twitter:image" content="https://polyflow.agency/og/default.jpg">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <style>
+        @font-face {
+            font-family: 'Outfit';
+            font-style: normal;
+            font-weight: 400 700;
+            font-display: swap;
+            src: url('/fonts/outfit-latin.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Playfair Display';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: url('/fonts/playfair-italic-latin.woff2') format('woff2');
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #0A0A0A; color: #E8E4E0;
+            font-family: 'Outfit', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased; line-height: 1.7; font-size: 16px;
+        }
+        .page { max-width: 720px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+        .breadcrumb {
+            font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.4); margin-bottom: 3rem;
+        }
+        .breadcrumb a { color: rgba(232, 228, 224, 0.6); text-decoration: none; transition: color 0.3s ease; }
+        .breadcrumb a:hover { color: #E8E4E0; }
+        .section-label {
+            display: block; font-size: 0.7rem; letter-spacing: 0.2em;
+            text-transform: uppercase; color: rgba(232, 228, 224, 0.35); margin-bottom: 1.5rem;
+        }
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 600; letter-spacing: -0.03em; margin-bottom: 0.75rem;
+        }
+        .subtitle {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic; font-size: 1.15rem;
+            color: rgba(232, 228, 224, 0.6); margin-bottom: 3rem;
+        }
+        h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; margin-top: 3rem; margin-bottom: 1rem; }
+        h3 { font-size: 1rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.5rem; }
+        p { color: rgba(232, 228, 224, 0.75); margin-bottom: 1rem; }
+        ul { color: rgba(232, 228, 224, 0.75); margin-bottom: 1rem; padding-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        strong { color: #E8E4E0; font-weight: 600; }
+        a { color: #E8E4E0; text-decoration: underline; text-underline-offset: 3px; transition: opacity 0.3s ease; }
+        a:hover { opacity: 0.7; }
+        .divider { border: none; border-top: 1px solid rgba(232, 228, 224, 0.1); margin: 3rem 0; }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
+        @media (max-width: 600px) { .feature-grid { grid-template-columns: 1fr; } }
+        .feature-card {
+            padding: 1.5rem; border: 1px solid rgba(232, 228, 224, 0.08); border-radius: 4px;
+        }
+        .feature-card strong { display: block; margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .feature-card p { font-size: 0.9rem; margin-bottom: 0; }
+        .cta-link {
+            display: inline-block; margin-top: 2rem; padding: 1rem 2rem;
+            font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+            text-decoration: none; border: 1px solid rgba(232, 228, 224, 0.3);
+            color: #E8E4E0; transition: all 0.4s ease;
+        }
+        .cta-link:hover { background: rgba(232, 228, 224, 0.05); border-color: rgba(232, 228, 224, 0.6); opacity: 1; }
+        .internal-links { margin-top: 3rem; }
+        .internal-links a {
+            display: inline-block; margin-right: 1.5rem; margin-bottom: 0.5rem;
+            font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.5); text-decoration: none;
+        }
+        .internal-links a:hover { color: #E8E4E0; opacity: 1; }
+        .footer-stamp {
+            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.25); margin-top: 4rem; text-align: center;
+        }
+    </style>
+
+    <!-- Schema: Service -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "3D Website Design",
+        "description": "Premium 3D website design using Three.js, WebGL, and custom GLSL shaders. Performance-guaranteed spatial web experiences for brands that refuse to be flat.",
+        "provider": {
+            "@type": "Organization",
+            "@id": "https://polyflow.agency/#organization"
+        },
+        "areaServed": [
+            { "@type": "Country", "name": "Romania" },
+            { "@type": "Continent", "name": "Europe" }
+        ],
+        "serviceType": "3D Website Design",
+        "url": "https://polyflow.agency/services/3d-website-design/"
+    }
+    </script>
+
+    <!-- Schema: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyflow.agency/" },
+            { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://polyflow.agency/services/" },
+            { "@type": "ListItem", "position": 3, "name": "3D Website Design", "item": "https://polyflow.agency/services/3d-website-design/" }
+        ]
+    }
+    </script>
+</head>
+
+<body>
+    <main class="page">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Polyflow</a> / <a href="/services/3d-website-design/">Services</a> / 3D Website Design
+        </nav>
+
+        <span class="section-label">Service</span>
+        <h1>3D Website Design</h1>
+        <p class="subtitle">Spatial experiences for ambitious brands that refuse to stay flat.</p>
+
+        <p>A spatial website is not decoration. It is a permanent brand asset. When every competitor sits on a templated grid, depth becomes leverage. The visitor lingers, the brand registers, and the price you can charge climbs with the dwell time. For luxury maisons and high-growth tech firms, that depth is the difference between a website and a landmark.</p>
+
+        <p>Polyflow designs and builds spatial websites from the foundation up. No templates, no drag-and-drop builders, no plugins masquerading as depth. Each project is bespoke, engineered, and tuned to ship at 60 FPS on every device, including iOS Safari, where most spatial work quietly fails.</p>
+
+        <h2>What a Spatial Website Includes</h2>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <strong>Scroll-Driven Camera</strong>
+                <p>The scroll becomes a cinematic path through space. Content reveals itself spatially, not vertically, and the brand gains a sequence the visitor remembers.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Custom Shading</strong>
+                <p>Hand-written shaders for surfaces that no library delivers. Holographic skins, gradient flows, and particle fields shaped to the brand's exact register.</p>
+            </div>
+            <div class="feature-card">
+                <strong>3D Model Integration</strong>
+                <p>Product models, brand objects, and bespoke geometry loaded as optimized assets with refined lighting and environment maps.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Performance Engineering</strong>
+                <p>Draw call budgets, instanced rendering, mobile GPU discipline. The site holds 60 FPS, or it does not ship.</p>
+            </div>
+        </div>
+
+        <h2>The Technical Foundation</h2>
+
+        <p>Every spatial website Polyflow ships rests on a proven, engineered foundation:</p>
+
+        <ul>
+            <li><strong>Scene architecture.</strong> Composition, camera systems, and a render pipeline crafted for maintainability and weight.</li>
+            <li><strong>Custom shading.</strong> Vertex and fragment programs written for the brand, not borrowed from a material library.</li>
+            <li><strong>Scroll choreography.</strong> Frame-perfect timeline control with scroll-driven sequencing and cinematic pacing.</li>
+            <li><strong>Smooth scroll layer.</strong> Engineered scroll physics that protect the depth of the experience on every device.</li>
+            <li><strong>Post-processing.</strong> Bloom, chromatic aberration, film grain, and tone mapping composed into a single refined render.</li>
+        </ul>
+
+        <p>We choose between vanilla and component-based architecture per project. The decision is technical, never ideological, and always anchored to performance.</p>
+
+        <h2>Who This Is For</h2>
+
+        <p>Spatial websites elevate brands where presence, weight, and prestige matter most:</p>
+
+        <ul>
+            <li><strong>Luxury maisons and premium brands.</strong> Where the website must match the dimension of the product.</li>
+            <li><strong>Architecture and real estate firms.</strong> Where spatial thinking is already the brand's native language.</li>
+            <li><strong>Tech companies and SaaS platforms.</strong> Where a spatial hero signals engineering depth before the first scroll.</li>
+            <li><strong>Studios building for their clients.</strong> Where Polyflow operates behind the curtain as the spatial engineering partner.</li>
+            <li><strong>Founders shaping a category.</strong> Where the website itself is the landmark that wins the next round.</li>
+        </ul>
+
+        <h2>The Performance Guarantee</h2>
+
+        <p>Every Polyflow project ships with a 60 FPS guarantee on mobile and desktop. This is not a marketing line. It is an engineering constraint embedded in the build from day one. Each experience carries an engineered mobile path that adapts particle density, disables heavier passes, and matches the device's true capability.</p>
+
+        <p>Pixel ratios are clamped, draw calls are budgeted, and frames are profiled. When a feature cannot hold 60 FPS on a mid-range phone, it is refined, redesigned, or removed. No "best viewed on desktop" disclaimers.</p>
+
+        <h2>Timeline and Investment</h2>
+
+        <p>A typical landmark runs three to five weeks from kickoff to delivery, calibrated to scope and content readiness. Make an inquiry to discuss how we can elevate your digital presence.</p>
+
+        <p>Every engagement includes:</p>
+        <ul>
+            <li>Weekly polished milestone deliveries.</li>
+            <li>Written updates and recorded walkthroughs.</li>
+            <li>60 FPS performance guarantee on mobile, tablet, and desktop.</li>
+            <li>Production deployment with security headers and edge optimization.</li>
+            <li>Thirty days of post-launch support.</li>
+        </ul>
+
+        <hr class="divider">
+
+        <a href="/contact/" class="cta-link">[ Request the blueprints ]</a>
+
+        <nav class="internal-links">
+            <a href="/services/webgl-development/">WebGL Development</a>
+            <a href="/work/polyflow-agency/">Case Studies</a>
+            <a href="/about/">About</a>
+            <a href="/">Home</a>
+        </nav>
+
+        <p class="footer-stamp">Polyflow — Bucharest — MMXXVI</p>
+    </main>
+</body>
+
+</html>

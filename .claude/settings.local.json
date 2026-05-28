@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(npm audit:*)",
-      "Bash(grep -E \"\\\\.\\(jsx?|ts|tsx|glsl\\)$\")"
-    ]
-  }
-}

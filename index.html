@@ -270,7 +270,7 @@
 
 <body>
     <noscript>
-        <div style="background:#0A0A0A;color:#E8E4E0;font-family:sans-serif;padding:4rem 2rem;min-height:100vh;">
+        <div style="background:#181717;color:#E8E4E0;font-family:sans-serif;padding:4rem 2rem;min-height:100vh;">
             <h1 style="font-size:3rem;letter-spacing:-0.04em;margin-bottom:1rem;">POLYFLOW</h1>
             <p style="font-style:italic;opacity:0.7;margin-bottom:2rem;">Where precision meets narrative flow.</p>
             <p style="margin-bottom:1rem;">Polyflow is a spatial engineering studio in Bucharest creating premium 3D websites and immersive digital experiences using Three.js, WebGL, and custom GLSL shaders.</p>
@@ -354,7 +354,7 @@
                     <p>and business ROI.</p>
                     <br>
                     <p>Let's discuss your brand's third dimension</p>
-                    <p>over a business lunch in Bucharest.</p>
+                    <p>over a video call.</p>
                 </div>
                 <a href="#" class="cta-button split-target">[ REQUEST THE BLUEPRINTS ]</a>
                 <p class="split-target caption footer-stamp">POLYFLOW — BUCHAREST — MMXXVI</p>
@@ -365,6 +365,22 @@
 
     <script type="module" src="/src/main.jsx"></script>
 
+    <!-- Gallery Labels Container -->
+    <div id="gallery-labels"></div>
+
+    <!-- Gallery Navigation Arrows -->
+    <button class="gallery-nav gallery-nav--prev" aria-label="Previous checkpoint">[ &#8592; ]</button>
+    <button class="gallery-nav gallery-nav--next" aria-label="Next checkpoint">[ &#8594; ]</button>
+
+    <!-- Content Overlay -->
+    <div id="content-overlay" class="content-overlay" role="dialog" aria-modal="true" aria-label="Page content">
+        <div class="content-overlay__backdrop"></div>
+        <div class="content-overlay__panel" data-lenis-prevent>
+            <button class="content-overlay__close" aria-label="Close overlay">[ × CLOSE ]</button>
+            <div class="content-overlay__content"></div>
+        </div>
+    </div>
+
     <!-- Contact Modal -->
     <div id="contact-modal" class="contact-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="contact-modal__backdrop"></div>
@@ -372,7 +388,7 @@
 
             <button class="contact-modal__close" aria-label="Close modal">[ × CLOSE ]</button>
 
-            <span class="contact-modal__label-top">04 — INITIATE CONTACT</span>
+            <span class="contact-modal__label-top">INITIATE CONTACT</span>
             <h2 class="contact-modal__title" id="modal-title">REQUEST THE<br>BLUEPRINTS.</h2>
 
             <div class="contact-modal__email-to">

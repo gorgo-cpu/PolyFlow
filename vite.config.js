@@ -49,6 +49,6 @@ export default defineConfig({
   // Exclude reference lessons from dependency optimization
   optimizeDeps: {
     exclude: [],
-    entries: ['src/main.js'],
+    entries: ['src/main.jsx'],
   },
 });

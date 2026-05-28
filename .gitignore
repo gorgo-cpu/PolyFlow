@@ -5,15 +5,27 @@ dist/
 .env
 .env.*
 .vscode/
+
+# Claude / AI tooling — everything
 .claude/
+.claude-mem/
+.claude-memory/
+.claude-cache/
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
+.cursor/
+.cursorrules
+.aider*
+.windsurfrules
+.github/copilot-instructions.md
+
 # Cloned tools and external repos
 claude-seo/
 
-# Analysis & documentation artifacts
-ANALYSIS.md
-SEO_REPORT.md
-SEO_STRATEGY.md
-POLYFLOWS_REPOSITORY_BREAKDOWN.md
+# Markdown — ignore all except README
+*.md
+!README.md
 
 # Three.js Journey reference resources (local only, not part of the project)
 resources_from_ThreeJS_Journey/

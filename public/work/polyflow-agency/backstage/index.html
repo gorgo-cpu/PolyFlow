@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Backstage: Building a Scroll-Driven 3D Website — Polyflow</title>
+    <meta name="description" content="A behind-the-scenes look at the engineering decisions behind Polyflow's scroll-driven 3D corridor: spatial camera motion, custom shading, multi-layer compositing, and a 60 FPS mobile standard.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://polyflow.agency/work/polyflow-agency/backstage/">
+
+    <meta property="og:title" content="Backstage: Building a Scroll-Driven 3D Website">
+    <meta property="og:description" content="The engineering decisions behind a spatial corridor: weighted camera motion, custom shading, multi-layer compositing, and a fixed 60 FPS standard.">
+    <meta property="og:image" content="https://polyflow.agency/og/default.jpg">
+    <meta property="og:url" content="https://polyflow.agency/work/polyflow-agency/backstage/">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Polyflow">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Backstage: Building a Scroll-Driven 3D Website">
+    <meta name="twitter:description" content="The engineering decisions behind a spatial corridor: weighted camera motion, custom shading, multi-layer compositing, and a fixed 60 FPS standard.">
+    <meta name="twitter:image" content="https://polyflow.agency/og/default.jpg">
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <style>
+        @font-face {
+            font-family: 'Outfit';
+            font-style: normal;
+            font-weight: 400 700;
+            font-display: swap;
+            src: url('/fonts/outfit-latin.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Playfair Display';
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+            src: url('/fonts/playfair-italic-latin.woff2') format('woff2');
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #0A0A0A; color: #E8E4E0;
+            font-family: 'Outfit', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased; line-height: 1.7; font-size: 16px;
+        }
+        .page { max-width: 720px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+        .breadcrumb {
+            font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.4); margin-bottom: 3rem;
+        }
+        .breadcrumb a { color: rgba(232, 228, 224, 0.6); text-decoration: none; transition: color 0.3s ease; }
+        .breadcrumb a:hover { color: #E8E4E0; }
+        .section-label {
+            display: block; font-size: 0.7rem; letter-spacing: 0.2em;
+            text-transform: uppercase; color: rgba(232, 228, 224, 0.35); margin-bottom: 1.5rem;
+        }
+        h1 {
+            font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+            font-weight: 600; letter-spacing: -0.03em; margin-bottom: 0.75rem;
+        }
+        .subtitle {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic; font-size: 1.15rem;
+            color: rgba(232, 228, 224, 0.6); margin-bottom: 3rem;
+        }
+        h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; margin-top: 3rem; margin-bottom: 1rem; }
+        h3 { font-size: 1rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; }
+        p { color: rgba(232, 228, 224, 0.75); margin-bottom: 1rem; }
+        ul, ol { color: rgba(232, 228, 224, 0.75); margin-bottom: 1rem; padding-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        strong { color: #E8E4E0; font-weight: 600; }
+        a { color: #E8E4E0; text-decoration: underline; text-underline-offset: 3px; transition: opacity 0.3s ease; }
+        a:hover { opacity: 0.7; }
+        .divider { border: none; border-top: 1px solid rgba(232, 228, 224, 0.1); margin: 3rem 0; }
+        .pull-quote {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            line-height: 1.5;
+            color: rgba(232, 228, 224, 0.85);
+            border-left: 1px solid rgba(232, 228, 224, 0.2);
+            padding-left: 1.5rem;
+            margin: 2.5rem 0;
+        }
+        .cta-link {
+            display: inline-block; margin-top: 2rem; padding: 1rem 2rem;
+            font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+            text-decoration: none; border: 1px solid rgba(232, 228, 224, 0.3);
+            color: #E8E4E0; transition: all 0.4s ease;
+        }
+        .cta-link:hover { background: rgba(232, 228, 224, 0.05); border-color: rgba(232, 228, 224, 0.6); opacity: 1; }
+        .internal-links { margin-top: 3rem; }
+        .internal-links a {
+            display: inline-block; margin-right: 1.5rem; margin-bottom: 0.5rem;
+            font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.5); text-decoration: none;
+        }
+        .internal-links a:hover { color: #E8E4E0; opacity: 1; }
+        .footer-stamp {
+            font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+            color: rgba(232, 228, 224, 0.25); margin-top: 4rem; text-align: center;
+        }
+    </style>
+
+    <!-- Schema: TechArticle -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "TechArticle",
+        "headline": "Backstage: Building a Scroll-Driven 3D Website",
+        "description": "A behind-the-scenes look at the engineering decisions behind Polyflow's agency website: weighted scroll-camera motion, custom holographic shading, multi-layer compositing, and a fixed 60 FPS mobile standard.",
+        "author": {
+            "@type": "Person",
+            "name": "George Constantin"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "@id": "https://polyflow.agency/#organization"
+        },
+        "datePublished": "2026-03-25",
+        "dateModified": "2026-05-15",
+        "mainEntityOfPage": "https://polyflow.agency/work/polyflow-agency/backstage/",
+        "image": "https://polyflow.agency/og/default.jpg",
+        "proficiencyLevel": "Advanced"
+    }
+    </script>
+
+    <!-- Schema: BreadcrumbList -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyflow.agency/" },
+            { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://polyflow.agency/work/" },
+            { "@type": "ListItem", "position": 3, "name": "Polyflow Agency", "item": "https://polyflow.agency/work/polyflow-agency/" },
+            { "@type": "ListItem", "position": 4, "name": "Backstage", "item": "https://polyflow.agency/work/polyflow-agency/backstage/" }
+        ]
+    }
+    </script>
+</head>
+
+<body>
+    <main class="page">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">Polyflow</a> / <a href="/work/polyflow-agency/">Polyflow Agency</a> / Backstage
+        </nav>
+
+        <span class="section-label">Technical Backstage</span>
+        <h1>Inside the Build</h1>
+        <p class="subtitle">The engineering decisions behind the corridor, and the standard that holds them together.</p>
+
+        <p>Most studios show the finished surface and stop there. This page does something different. It walks through the thinking behind the Polyflow corridor, the decisions that shaped it, and the standard every Digital Landmark is measured against. Not a tutorial. A look at how the work is reasoned.</p>
+
+        <h2>Scroll as Camera</h2>
+
+        <p>The corridor runs on a single idea. The visitor's scroll does not move a page, it moves a camera. As you scroll, the camera travels forward through space, past objects suspended in depth, toward content that reveals itself spatially rather than vertically.</p>
+
+        <p>The motion is deliberately weighted. The camera eases toward its target instead of snapping to it, so every scroll carries momentum through a place that feels physical. That weight is the difference between a website that scrolls and a space that carries you. On iOS, the native scroll feel is left intact, because Safari already moves with a quality no override improves.</p>
+
+        <p class="pull-quote">A flat website is read. A landmark is travelled.</p>
+
+        <h2>The Holographic Surface</h2>
+
+        <p>The central sphere does not wear a stock material. Its surface is hand-shaded, written specifically for this landmark, with animated light drifting across it in a slow, continuous pass. The effect reads as holographic, engineered, and alive.</p>
+
+        <p>This is the line between a spatial website and a templated one. A library material gives every brand the same surface. Bespoke shading gives one brand a surface no competitor can reproduce. Custom craft is where the difference becomes visible, and where it stays out of reach.</p>
+
+        <h2>Three Layers, One Frame</h2>
+
+        <p>The experience is not a single render. It is three layers composited into one seamless frame. A spatial layer carries the scene, the sphere, the blueprint objects, the depth. A dedicated layer holds the text, so type stays razor-sharp at any distance. An interface layer carries the glass panels and the interaction.</p>
+
+        <p>Building each layer is the easy part. The ambition is making three independent rendering systems agree on depth, motion, and timing, frame after frame, without a seam the visitor can ever find. That agreement is the engineering. Everything else is detail.</p>
+
+        <h2>Built for the Worst Device</h2>
+
+        <p>Performance is not a pass at the end of a project. It is a constraint set on the first day. Every Polyflow build is engineered against the hardest target in the room, a mid-range phone, and tuned until it holds without apology.</p>
+
+        <p>Each experience carries an engineered mobile path that activates on its own. Density drops where the eye will not miss it, the heaviest passes step aside, and the render adapts to the device in hand. The visitor never sees the compromise. They see a landmark holding 60 FPS, on iOS Safari, on a laptop, on whatever they arrived with. The standard is fixed. The build bends to meet it.</p>
+
+        <h2>What the Build Taught Us</h2>
+
+        <p><strong>The hardest device is the real brief.</strong> Anything runs on a desktop with a discrete GPU. A landmark is judged on the phone in a pocket, and that is where the engineering earns its name.</p>
+
+        <p><strong>Seamless is expensive.</strong> Composing separate rendering systems into one frame is fragile by nature. The polish a visitor never notices is the part that demands the most precision.</p>
+
+        <p><strong>Timing needs a single source of truth.</strong> Scroll, animation, and render must move on one clock. Two competing rhythms produce a stutter the eye catches long before any tool reports it.</p>
+
+        <hr class="divider">
+
+        <a href="/work/polyflow-agency/" class="cta-link">[ Back to the Case Study ]</a>
+
+        <nav class="internal-links">
+            <a href="/services/webgl-development/">WebGL Development</a>
+            <a href="/services/3d-website-design/">3D Website Design</a>
+            <a href="/contact/">Contact</a>
+            <a href="/">Home</a>
+        </nav>
+
+        <p class="footer-stamp">Polyflow — Bucharest — MMXXVI</p>
+    </main>
+</body>
+
+</html>
