@@ -1,5 +1,7 @@
 import { CHECKPOINTS } from './checkpointConfig.js';
 import gsap from 'gsap';
+import { prefersReducedMotion } from '../utils/device.js';
+import { trapFocus } from '../utils/focusTrap.js';
 
 /**
  * ContentOverlay
@@ -15,6 +17,7 @@ export class ContentOverlay {
     this.isOpen = false;
     this._cache = new Map();
     this._timeline = null;
+    this._releaseFocus = null;
 
     // DOM refs
     this.overlay = document.getElementById('content-overlay');
@@ -65,17 +68,20 @@ export class ContentOverlay {
 
     // Animate in
     gsap.set(this.backdrop, { opacity: 0 });
-    gsap.set(this.panel, { scale: 0, opacity: 0 });
+    // Reduced motion: fade only, no depth-zoom
+    const reduced = prefersReducedMotion();
+    gsap.set(this.panel, { scale: reduced ? 1 : 0, opacity: 0 });
 
     this._timeline = gsap.timeline();
     this._timeline
       .to(this.backdrop, { opacity: 1, duration: 0.35, ease: 'power2.out' }, 0)
-      .to(this.panel, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.2)' }, 0.05);
+      .to(this.panel, { scale: 1, opacity: 1, duration: reduced ? 0.2 : 0.5, ease: reduced ? 'none' : 'back.out(1.2)' }, 0.05);
 
     // Load content
     this._loadContent(checkpoint.page);
 
-    // Focus close button for keyboard accessibility
+    // Keep keyboard focus inside the panel; release restores it to the [ EXPLORE ] trigger
+    this._releaseFocus = trapFocus(this.panel);
     requestAnimationFrame(() => this.closeBtn.focus());
   }
 
@@ -84,6 +90,9 @@ export class ContentOverlay {
    */
   close() {
     if (!this.isOpen) return;
+
+    this._releaseFocus?.();
+    this._releaseFocus = null;
 
     this._timeline = gsap.timeline({
       onComplete: () => {
@@ -96,7 +105,7 @@ export class ContentOverlay {
     });
 
     this._timeline
-      .to(this.panel, { scale: 0, opacity: 0, duration: 0.3, ease: 'power2.in' }, 0)
+      .to(this.panel, { scale: prefersReducedMotion() ? 1 : 0, opacity: 0, duration: 0.3, ease: 'power2.in' }, 0)
       .to(this.backdrop, { opacity: 0, duration: 0.3, ease: 'power2.in' }, 0);
   }
 

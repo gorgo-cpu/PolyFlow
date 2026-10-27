@@ -1,13 +1,16 @@
 import gsap from 'gsap';
+import { trapFocus } from '../utils/focusTrap.js';
 
 export function initContactModal(lenis) {
   const modal         = document.getElementById('contact-modal');
   const modalBackdrop = modal.querySelector('.contact-modal__backdrop');
   const modalPanel    = modal.querySelector('.contact-modal__panel');
   const modalClose    = modal.querySelector('.contact-modal__close');
+  let releaseFocus = null;
 
   function openContactModal() {
     lenis.stop();
+    releaseFocus = trapFocus(modalPanel);
     modal.classList.add('is-open');
     gsap.set(modalBackdrop, { opacity: 0 });
     gsap.set(modalPanel,    { scale: 0.94, opacity: 0 });
@@ -18,6 +21,8 @@ export function initContactModal(lenis) {
   }
 
   function closeContactModal() {
+    releaseFocus?.();
+    releaseFocus = null;
     gsap.timeline({ onComplete: () => { modal.classList.remove('is-open'); } })
       .to(modalPanel,    { scale: 0.94, opacity: 0, duration: 0.3, ease: 'power2.in' }, 0)
       .to(modalBackdrop, { opacity: 0,              duration: 0.3, ease: 'power2.in' }, 0);

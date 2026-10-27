@@ -1,4 +1,5 @@
 import gsap from 'gsap';
+import { prefersReducedMotion } from '../utils/device.js';
 
 /**
  * GalleryNavigation
@@ -96,7 +97,7 @@ export class GalleryNavigation {
 
     this._tween = gsap.to(this, {
       orbitAngle: angle,
-      duration: 0.8,
+      duration: prefersReducedMotion() ? 0 : 0.8, // Reduced motion: cut instead of a 90° camera sweep
       ease: 'power2.inOut',
       onComplete: () => {
         this.isNavigating = angle !== 0;

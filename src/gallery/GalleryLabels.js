@@ -45,7 +45,7 @@ export class GalleryLabels {
       el.appendChild(btn);
 
       this.container.appendChild(el);
-      this.labels.push({ el, btn, index: i });
+      this.labels.push({ el, btn, index: i, lastX: undefined, lastY: undefined, lastOpacity: undefined });
     }
   }
 
@@ -114,24 +114,29 @@ export class GalleryLabels {
         continue;
       }
 
-      // Position the label above the object
-      label.el.style.transform = `translate(${screen.x}px, ${screen.y - 30}px) translate(-50%, -100%)`;
+      // DOM writes only on change: rounded to whole px / 2-decimal opacity so a static
+      // camera produces zero style invalidations per frame
+      const x = Math.round(screen.x);
+      const y = Math.round(screen.y - 30);
+      if (x !== label.lastX || y !== label.lastY) {
+        label.lastX = x;
+        label.lastY = y;
+        label.el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%)`;
+      }
 
       // Visibility and active state
       label.el.classList.add('is-visible');
-
-      if (activeIndex === i) {
-        label.el.classList.add('is-active');
-      } else {
-        label.el.classList.remove('is-active');
-      }
+      label.el.classList.toggle('is-active', activeIndex === i);
 
       // Distance-based opacity for non-active labels
+      let opacity = '';
       if (activeIndex !== i) {
         const proximity = 1 - Math.min(Math.abs(dist) / 60, 1);
-        label.el.style.opacity = 0.2 + proximity * 0.3;
-      } else {
-        label.el.style.opacity = '';
+        opacity = (0.2 + proximity * 0.3).toFixed(2);
+      }
+      if (opacity !== label.lastOpacity) {
+        label.lastOpacity = opacity;
+        label.el.style.opacity = opacity;
       }
     }
   }

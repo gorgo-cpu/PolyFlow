@@ -2,14 +2,16 @@ import './style.css';
 import * as THREE from 'three';
 
 import { isMobile, isMobileDevice } from './utils/device.js';
-import { initScrollGuards, createLenis, attachNativeScroll } from './animation/scroll.js';
+import { initScrollGuards, createLenis, attachNativeScroll, scrollToCameraZ } from './animation/scroll.js';
 import { sizes, attachResize } from './core/Sizes.js';
 import { createRenderer, createCSS3DRenderer } from './core/Renderer.js';
 import { createCamera, attachPointerSnapBack } from './core/Camera.js';
 import { createComposer } from './core/composer.js';
+import { isWebGLSupported, showWebGLFallback, watchContextLoss } from './core/webglSupport.js';
 import { createLoadingManager, playSignatureAnimation, dismissLoader } from './core/loader.js';
 
 import { createHolographicMaterial } from './world/holographicMaterial.js';
+import { createDust } from './world/dust.js';
 import { loadSphere, createDuplicateSphere, sphereRefs } from './world/sphere.js';
 import { createContentCards } from './world/contentCards.js';
 import { createBlueprints } from './world/blueprints/index.js';
@@ -22,6 +24,7 @@ import { stepCardReveal } from './animation/cardReveal.js';
 
 import { initContactModal } from './ui/contactModal.js';
 import { initMobileMenu } from './ui/mobileMenu.js';
+import { initConsent } from './ui/consent.js';
 
 import { CheckpointManager } from './gallery/CheckpointManager.js';
 import { GalleryLabels } from './gallery/GalleryLabels.js';
@@ -34,6 +37,16 @@ import { GalleryNavigation } from './gallery/GalleryNavigation.js';
  * builds the eight spatial blueprints, and runs the per-frame tick loop.
  */
 
+// First: consent must not depend on WebGL or asset loading succeeding
+initConsent();
+
+// Halt module evaluation on devices without WebGL: everything below needs a GL context.
+// The throw is deliberate — ES modules have no top-level return.
+if (!isWebGLSupported()) {
+  showWebGLFallback();
+  throw new Error('WebGL unavailable: static fallback shown');
+}
+
 initScrollGuards();
 const lenis = createLenis();
 
@@ -41,6 +54,8 @@ const canvas = document.querySelector('#webgl-canvas');
 const scene = new THREE.Scene();
 
 const renderer = createRenderer(canvas);
+let contextLost = false;
+watchContextLoss(canvas, (lost) => { contextLost = lost; });
 const css3dRenderer = createCSS3DRenderer();
 const { camera, controls } = createCamera(canvas);
 scene.add(camera);
@@ -52,10 +67,13 @@ attachResize({ camera, renderer, css3dRenderer, composer });
 const state = { targetCameraZ: 14, currentCameraZ: 14 };
 attachNativeScroll(state);
 
-// Mobile-only nav overlay. No-op on desktop.
+// Mobile nav overlay. Toggle is only visible below the CSS breakpoint.
 initMobileMenu(lenis);
 
 const material = createHolographicMaterial();
+
+// Built at boot, independent of model loading, so it is in place the moment the loader lifts
+const dust = createDust(scene, renderer);
 
 const { manager: loadingManager, modelLoadedPromise } = createLoadingManager();
 playSignatureAnimation();
@@ -85,7 +103,10 @@ modelLoadedPromise.then(() => {
 
   createDuplicateSphere(scene);
 
-  checkpointManager = new CheckpointManager(() => state.currentCameraZ);
+  checkpointManager = new CheckpointManager(
+    () => state.currentCameraZ,
+    (cameraZ) => scrollToCameraZ(lenis, cameraZ)
+  );
   contentOverlay = new ContentOverlay(lenis, checkpointManager, camera);
 
   const { openContactModal } = initContactModal(lenis);
@@ -109,6 +130,12 @@ let _cssVisible = false;
 let _cssVisCheckZ = Number.NEGATIVE_INFINITY;
 
 const tick = () => {
+  // Skip all GL work while the context is lost; resume on webglcontextrestored
+  if (contextLost) {
+    window.requestAnimationFrame(tick);
+    return;
+  }
+
   // getDelta() must come first — getElapsedTime() calls it internally and would reset the timer
   const delta = Math.min(clock.getDelta(), 0.05); // clamp prevents huge jump on tab re-focus
   const elapsedTime = clock.elapsedTime;
@@ -127,6 +154,7 @@ const tick = () => {
   stepCameraTransport({ delta, state, lenis, blueprints, cssObjects, galleryNavigation });
 
   camera.position.z = state.currentCameraZ;
+  dust.update(elapsedTime, delta, state.currentCameraZ);
   // Force the camera to always look forward down the tunnel
   const orbitAngle = galleryNavigation ? galleryNavigation.orbitAngle : 0;
   const targetX = Math.sin(orbitAngle) * 20;

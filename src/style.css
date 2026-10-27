@@ -1189,3 +1189,142 @@ html.lenis body {
     padding-left: 0.6rem;
   }
 }
+/* ── Analytics Consent Banner ──────────────────── */
+/* Sits under the loader and contact modal (z 10000), above the mobile menu (9500) */
+.consent-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 9800;
+  width: min(560px, calc(100% - 32px));
+  transform: translate(-50%, 1rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+  background: rgba(10, 10, 10, 0.92);
+  border: 1px solid rgba(232, 228, 224, 0.18);
+  color: #E8E4E0;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+}
+
+.consent-banner.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+.consent-banner__text {
+  margin: 0;
+}
+
+.consent-banner__text a {
+  color: #FFF5E4;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.consent-banner__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.consent-banner__btn {
+  background: transparent;
+  border: 1px solid rgba(232, 228, 224, 0.18);
+  color: rgba(232, 228, 224, 0.7);
+  font: inherit;
+  letter-spacing: 0.15em;
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.consent-banner__btn:hover,
+.consent-banner__btn:focus-visible {
+  color: #FFF5E4;
+  border-color: rgba(232, 228, 224, 0.5);
+}
+
+.consent-banner__btn--accept {
+  color: #FFF5E4;
+  border-color: rgba(232, 228, 224, 0.4);
+}
+
+@media (max-width: 768px) {
+  .consent-banner {
+    flex-direction: column;
+    align-items: stretch;
+    bottom: 1rem;
+  }
+
+  .consent-banner__actions {
+    justify-content: flex-end;
+  }
+}
+
+/* ── No-WebGL Fallback ─────────────────────────── */
+.webgl-fallback {
+  display: none;
+}
+
+.webgl-fallback.is-visible {
+  position: relative;
+  z-index: 50;
+  display: block;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 25vh 16px 4rem;
+  color: #E8E4E0;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-weight: 300;
+}
+
+.webgl-fallback__note {
+  margin: 0 0 2rem;
+  color: rgba(232, 228, 224, 0.6);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.webgl-fallback__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.webgl-fallback__links a {
+  display: block;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid rgba(232, 228, 224, 0.12);
+  color: #FFF5E4;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.webgl-fallback__links a:hover,
+.webgl-fallback__links a:focus-visible {
+  color: #E8E4E0;
+}
+
+/* ── Reduced Motion ────────────────────────────── */
+/* Collapses CSS transitions/animations; GSAP and WebGL motion are gated in JS via prefersReducedMotion() */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}

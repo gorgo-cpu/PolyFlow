@@ -9,9 +9,13 @@ import {
  * Tracks which checkpoint the camera is near (proximity-based).
  * No forced snapping — free scroll throughout the corridor.
  */
+// Land this far before the object so it sits ahead in frame and well inside PROXIMITY_RANGE
+const SNAP_Z_OFFSET = 8;
+
 export class CheckpointManager {
-  constructor(getCameraZ) {
+  constructor(getCameraZ, scrollToCameraZ) {
     this.getCameraZ = getCameraZ;
+    this.scrollToCameraZ = scrollToCameraZ;
 
     this.activeIndex = -1;
     this.isGalleryActive = false;
@@ -83,6 +87,15 @@ export class CheckpointManager {
   getActive() {
     if (this.activeIndex < 0) return null;
     return CHECKPOINTS[this.activeIndex];
+  }
+
+  /**
+   * Scroll the camera to an interactive checkpoint (used by in-overlay cross-links).
+   */
+  snapTo(index) {
+    const cp = CHECKPOINTS[index];
+    if (!cp || !cp.interactive) return;
+    this.scrollToCameraZ(cp.z + SNAP_Z_OFFSET);
   }
 
   dispose() {

@@ -9,6 +9,12 @@ export function getIsMobile() {
 // For anything that must react to rotation or address-bar collapse, call getIsMobile().
 export const isMobile = getIsMobile();
 
+// Live query: the OS setting can change mid-session, and MediaQueryList.matches stays current
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+export function prefersReducedMotion() {
+  return reducedMotionQuery.matches;
+}
+
 // Performance tier is fixed per device: a width check flips phones to the desktop GPU path in landscape.
 // (pointer: coarse) catches iPadOS, which reports a desktop Safari UA.
 export const isMobileDevice =

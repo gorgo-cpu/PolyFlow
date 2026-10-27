@@ -1,4 +1,5 @@
 import { CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+import { isMobileDevice, getIsMobile } from '../utils/device.js';
 
 const MAILTO_HREF = 'mailto:clients.polyflow@gmail.com?subject=%5B%20BLUEPRINT%20REQUEST%20%5D&body=NAME%3A%20%0ACOMPANY%3A%20%0ABUDGET%3A%20%0A%0AMESSAGE%3A%20';
 
@@ -32,8 +33,8 @@ export function createContentCards(scene, openContactModal) {
 
     button.addEventListener('click', (e) => {
       e.preventDefault();
-      const isMobileNow = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.innerWidth < 768;
-      if (isMobileNow) {
+      // Phones/tablets hand off to the native mail app; narrow desktop windows too, as before
+      if (isMobileDevice || getIsMobile()) {
         window.location.href = MAILTO_HREF;
       } else {
         openContactModal();

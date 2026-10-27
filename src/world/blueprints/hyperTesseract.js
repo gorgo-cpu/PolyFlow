@@ -33,8 +33,8 @@ export function createHyperTesseract(scene, { xPos, zPos }) {
   // Re-mapped lateral spacing to drag the object 60% inward, forcing a camera collision overlap
   tessMesh.position.set(xPos * 0.4, 0, zPos);
 
-  // Replicates global sequence rotation natively via GSAP
-  gsap.to(tessMesh.rotation, {
+  // Replicates global sequence rotation natively via GSAP; paused while out of range (see update)
+  const rotationTween = gsap.to(tessMesh.rotation, {
     x: Math.PI * 4,
     y: Math.PI * 8,
     duration: 90,
@@ -73,7 +73,11 @@ export function createHyperTesseract(scene, { xPos, zPos }) {
   }
 
   function update(elapsedTime, currentCameraZ) {
-    if (Math.abs(currentCameraZ - tessMesh.position.z) >= 55) return;
+    if (Math.abs(currentCameraZ - tessMesh.position.z) >= 55) {
+      if (!rotationTween.paused()) rotationTween.pause();
+      return;
+    }
+    if (rotationTween.paused()) rotationTween.resume();
 
     const scale = 5.0;
     const chaos = 1.2;

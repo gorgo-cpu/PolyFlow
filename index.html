@@ -2,15 +2,7 @@
 <html lang="en">
 
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8VS99S2PJ9"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-8VS99S2PJ9');
-    </script>
+    <!-- Google Analytics loads from src/ui/consent.js, only after opt-in -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -294,6 +286,19 @@
     </div>
 
     <canvas id="webgl-canvas"></canvas>
+
+    <!-- Shown only when WebGL is unavailable (src/core/webglSupport.js) -->
+    <nav id="webgl-fallback" class="webgl-fallback" aria-label="Site pages">
+        <p class="webgl-fallback__note">This experience needs WebGL, which your browser has disabled or does not support. Explore Polyflow below.</p>
+        <ul class="webgl-fallback__links">
+            <li><a href="/about/">About</a></li>
+            <li><a href="/services/3d-website-design/">3D Website Design</a></li>
+            <li><a href="/services/webgl-development/">WebGL Development</a></li>
+            <li><a href="/work/polyflow-agency/">Case Study</a></li>
+            <li><a href="/work/polyflow-agency/backstage/">Backstage</a></li>
+            <li><a href="/contact/">Contact</a></li>
+        </ul>
+    </nav>
     <div id="css3d-container"></div>
 
     <!-- Mobile-only navigation menu (hidden on desktop via CSS) -->
@@ -439,6 +444,18 @@
 
             <a href="mailto:clients.polyflow@gmail.com?subject=%5B%20BLUEPRINT%20REQUEST%20%5D&body=NAME%3A%20%0ACOMPANY%3A%20%0ABUDGET%3A%20%0A%0AMESSAGE%3A%20" class="cta-button contact-modal__compose">[ COMPOSE EMAIL ]</a>
 
+        </div>
+    </div>
+
+    <!-- Analytics Consent -->
+    <div id="consent-banner" class="consent-banner" role="region" aria-label="Analytics consent">
+        <p class="consent-banner__text">
+            We use Google Analytics cookies to measure traffic, only with your consent.
+            <a href="/privacy-policy/">Privacy policy</a>
+        </p>
+        <div class="consent-banner__actions">
+            <button type="button" class="consent-banner__btn" data-consent="denied">[ DECLINE ]</button>
+            <button type="button" class="consent-banner__btn consent-banner__btn--accept" data-consent="granted">[ ACCEPT ]</button>
         </div>
     </div>
 </body>
