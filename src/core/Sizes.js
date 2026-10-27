@@ -1,8 +1,29 @@
 import { isMobileDevice } from '../utils/device.js';
 
+// Touch devices: iOS Safari's toolbar collapses on the first scroll and fires a stream of
+// height-only resizes. Reallocating the renderer + composer targets on each one stalls the GPU,
+// and a moving innerHeight shifts the scroll -> camera Z mapping mid-gesture. So touch devices
+// size to the *large* viewport (100lvh), which is constant while the toolbar animates; the
+// canvas simply extends under the toolbar. Only width/orientation changes trigger a resize.
+
+let lvhProbe = null;
+
+function measureLargeViewportHeight() {
+  if (!lvhProbe) {
+    lvhProbe = document.createElement('div');
+    lvhProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100lvh;visibility:hidden;pointer-events:none;';
+    document.body.appendChild(lvhProbe);
+  }
+  const lvh = lvhProbe.offsetHeight;
+  // Pre-iOS 15.4 has no lvh unit: fall back to the tallest height currently known
+  return lvh > 0 ? lvh : Math.max(window.innerHeight, Math.round(window.visualViewport?.height ?? 0));
+}
+
 function readViewport() {
-  // visualViewport reflects the area NOT covered by iOS Safari's address bar / keyboard.
-  // Fall back to window dimensions for non-supporting browsers.
+  if (isMobileDevice) {
+    return { width: window.innerWidth, height: measureLargeViewportHeight() };
+  }
+  // visualViewport reflects the area not covered by browser UI; fall back for non-supporting browsers
   const vv = window.visualViewport;
   return {
     width: vv ? Math.round(vv.width) : window.innerWidth,
@@ -11,6 +32,8 @@ function readViewport() {
 }
 
 const initial = readViewport();
+// width/height: render size. height doubles as the scroll viewport height for the
+// scroll -> camera Z mapping (stable on touch devices; see above).
 export const sizes = {
   width: initial.width,
   height: initial.height,
@@ -24,6 +47,9 @@ export function attachResize({ camera, renderer, css3dRenderer, composer }) {
     rafScheduled = false;
 
     const { width, height } = readViewport();
+    // Toolbar collapse on touch devices lands here with identical values: skip all reallocation
+    if (width === sizes.width && height === sizes.height) return;
+
     sizes.width = width;
     sizes.height = height;
 

@@ -1,10 +1,22 @@
 import gsap from 'gsap';
+import { isMobileDevice } from '../utils/device.js';
+
+// Touch devices: hide a card's DOM layer once the camera is this close. Near the camera a CSS3D
+// card is magnified enormously, and iOS Safari re-rasterizes that text every frame (worst during
+// the portal FOV warp), which stutters and flickers. CSS3DRenderer maps visible=false to display:none.
+const CARD_NEAR_CULL = 5;
 
 // Reveal CSS3D card text lines (.line-inner) when camera enters the proximity window,
 // and reset them once the camera has moved well past or before the card.
 export function stepCardReveal({ currentCameraZ, cssObjects }) {
   cssObjects.forEach(card => {
     const dist = currentCameraZ - card.z;
+
+    if (isMobileDevice) {
+      const visible = dist > CARD_NEAR_CULL;
+      if (card.obj.visible !== visible) card.obj.visible = visible;
+    }
+
     if (dist > 0 && dist < 30) {
       if (card.inners.length > 0 && !card.revealed) {
         card.revealed = true;

@@ -1,5 +1,6 @@
 import Lenis from 'lenis';
 import gsap from 'gsap';
+import { sizes } from '../core/Sizes.js';
 
 // Prevent browser from restoring scroll position on reload.
 // MUST run before any module mutates the scroll state.
@@ -25,7 +26,7 @@ export function createLenis() {
 
 // Inverse of attachNativeScroll: smooth-scroll so targetCameraZ lands on the given Z.
 export function scrollToCameraZ(lenis, cameraZ) {
-  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  const maxScroll = document.body.scrollHeight - sizes.height; // sizes.height: stable through iOS toolbar collapse
   const progress = (14 - cameraZ) / 235;
   lenis.scrollTo(progress * maxScroll, { duration: 1.6 });
 }
@@ -34,7 +35,7 @@ export function scrollToCameraZ(lenis, cameraZ) {
 // Slightly past −220 lets the asymptotic LERP definitively cross the teleport barrier.
 export function attachNativeScroll(state) {
   window.addEventListener('scroll', () => {
-    const maxScroll = document.body.scrollHeight - window.innerHeight;
+    const maxScroll = document.body.scrollHeight - sizes.height; // sizes.height: stable through iOS toolbar collapse
     if (maxScroll > 0) {
       const progress = window.scrollY / maxScroll;
       state.targetCameraZ = 14 - (progress * 235);

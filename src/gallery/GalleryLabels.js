@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { CHECKPOINTS } from './checkpointConfig.js';
+import { sizes } from '../core/Sizes.js';
 
 /**
  * GalleryLabels
@@ -69,8 +70,8 @@ export class GalleryLabels {
     this._projVec.setFromMatrixPosition(object.matrixWorld);
     this._projVec.project(this.camera);
 
-    const halfW = window.innerWidth * 0.5;
-    const halfH = window.innerHeight * 0.5;
+    const halfW = sizes.width * 0.5; // Canvas size, not window: canvas spans the large viewport on touch
+    const halfH = sizes.height * 0.5;
 
     return {
       x: (this._projVec.x * halfW) + halfW,
