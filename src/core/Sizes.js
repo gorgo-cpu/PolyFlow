@@ -1,4 +1,4 @@
-import { getIsMobile } from '../utils/device.js';
+import { isMobileDevice } from '../utils/device.js';
 
 function readViewport() {
   // visualViewport reflects the area NOT covered by iOS Safari's address bar / keyboard.
@@ -16,7 +16,8 @@ export const sizes = {
   height: initial.height,
 };
 
-export function attachResize({ camera, renderer, css3dRenderer, composer, bloomPass, filmPass, rgbShiftPass }) {
+// Pass enablement is set once in createComposer: the device tier cannot change on rotation.
+export function attachResize({ camera, renderer, css3dRenderer, composer }) {
   let rafScheduled = false;
 
   const apply = () => {
@@ -29,8 +30,7 @@ export function attachResize({ camera, renderer, css3dRenderer, composer, bloomP
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
 
-    const nowMobile = getIsMobile();
-    const targetPixelRatio = nowMobile ? 1 : Math.min(window.devicePixelRatio, 2);
+    const targetPixelRatio = isMobileDevice ? 1 : Math.min(window.devicePixelRatio, 2);
 
     renderer.setSize(width, height);
     renderer.setPixelRatio(targetPixelRatio);
@@ -39,13 +39,6 @@ export function attachResize({ camera, renderer, css3dRenderer, composer, bloomP
 
     composer.setSize(width, height);
     composer.setPixelRatio(targetPixelRatio);
-
-    filmPass.enabled = !nowMobile;
-    rgbShiftPass.enabled = !nowMobile;
-    bloomPass.resolution.set(
-      nowMobile ? width / 2 : width,
-      nowMobile ? height / 2 : height
-    );
   };
 
   const schedule = () => {

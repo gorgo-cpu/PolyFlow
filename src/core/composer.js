@@ -8,7 +8,7 @@ import { FilmPass } from 'three/addons/postprocessing/FilmPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { sizes } from './Sizes.js';
 
-export function createComposer({ renderer, scene, camera, isMobile }) {
+export function createComposer({ renderer, scene, camera, isMobileDevice }) {
   const renderTarget = new THREE.WebGLRenderTarget(sizes.width, sizes.height, {
     samples: renderer.getPixelRatio() === 1 ? 2 : 0, // Anti-aliasing if supported
   });
@@ -38,10 +38,10 @@ export function createComposer({ renderer, scene, camera, isMobile }) {
   composer.addPass(new OutputPass());
 
   // Mobile performance tier (thermal/battery override)
-  if (isMobile) {
+  // Bloom needs no override: UnrealBloomPass sizes its mip chain from the composer, already at half resolution
+  if (isMobileDevice) {
     renderer.setPixelRatio(1);
     composer.setPixelRatio(1);
-    bloomPass.resolution = new THREE.Vector2(sizes.width / 2, sizes.height / 2);
     // Kill the two most expensive extra passes — saves 2 full-screen GPU blits per frame
     filmPass.enabled = false;
     rgbShiftPass.enabled = false;

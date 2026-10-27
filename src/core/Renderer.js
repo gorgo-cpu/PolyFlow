@@ -5,7 +5,7 @@ import { sizes } from './Sizes.js';
 export function createRenderer(canvas) {
   const renderer = new THREE.WebGLRenderer({
     canvas,
-    antialias: true,
+    antialias: false, // Scene renders into the composer's target; canvas MSAA would only smooth the final fullscreen quad
     powerPreference: 'high-performance', // Prefer discrete GPU on dual-GPU laptops
   });
   renderer.setClearColor('#0A0A0A');

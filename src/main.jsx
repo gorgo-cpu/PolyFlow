@@ -1,7 +1,7 @@
 import './style.css';
 import * as THREE from 'three';
 
-import { isMobile } from './utils/device.js';
+import { isMobile, isMobileDevice } from './utils/device.js';
 import { initScrollGuards, createLenis, attachNativeScroll } from './animation/scroll.js';
 import { sizes, attachResize } from './core/Sizes.js';
 import { createRenderer, createCSS3DRenderer } from './core/Renderer.js';
@@ -45,9 +45,9 @@ const css3dRenderer = createCSS3DRenderer();
 const { camera, controls } = createCamera(canvas);
 scene.add(camera);
 
-const { composer, bloomPass, filmPass, rgbShiftPass } = createComposer({ renderer, scene, camera, isMobile });
+const { composer, bloomPass } = createComposer({ renderer, scene, camera, isMobileDevice });
 
-attachResize({ camera, renderer, css3dRenderer, composer, bloomPass, filmPass, rgbShiftPass });
+attachResize({ camera, renderer, css3dRenderer, composer });
 
 const state = { targetCameraZ: 14, currentCameraZ: 14 };
 attachNativeScroll(state);
@@ -90,6 +90,9 @@ modelLoadedPromise.then(() => {
 
   const { openContactModal } = initContactModal(lenis);
   cssObjects = createContentCards(scene, openContactModal);
+  // Invalidate the CSS3D visibility cache: it was computed with zero cards at boot and
+  // would otherwise stay false until the camera moves, hiding the hero text on load
+  _cssVisCheckZ = Number.NEGATIVE_INFINITY;
 
   ({ blueprints, dynamicUpdaters } = createBlueprints(scene, isMobile));
 
