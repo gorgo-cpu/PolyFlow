@@ -226,14 +226,30 @@ html.lenis body {
    DIGITAL MARBLE LENS
    ═══════════════════════════════════════════════ */
 .glass-lens {
-  backdrop-filter: blur(16px) saturate(180%);
-  background: rgba(255, 255, 255, 0.034);
+  /* Stacking context so the ::before frost sits behind the text but inside the card */
+  position: relative;
+  z-index: 0;
   border: 1px solid rgba(247, 236, 87, 0.151);
   border-radius: 4px;
   padding: 5rem 4rem;
   width: 1200px;
   margin: 0 auto;
   /* color inherits from body (#0A0A0A) — dark text on frosted glass */
+}
+
+/* Frost lives on a sibling layer, not the text's ancestor: a backdrop-filter element is
+   rasterized as one offscreen surface, then resampled through the CSS3D matrix, which
+   leaves every line of text inside it soft at any distance */
+.glass-lens::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.034);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
 }
 
 /* ═══════════════════════════════════════════════
@@ -423,10 +439,13 @@ html.lenis body {
   /* Reduced blur radius — blur cost scales quadratically, 6px is ~7x cheaper than 16px */
   /* Light text because the corridor behind cards is dark — frosted dark scene ≠ readable dark text */
   .glass-lens {
-    backdrop-filter: blur(6px) saturate(140%) !important;
-    -webkit-backdrop-filter: blur(6px) saturate(140%) !important;
-    background: rgba(255, 255, 255, 0.06) !important;
     color: #0A0A0A !important;
+  }
+
+  .glass-lens::before {
+    backdrop-filter: blur(6px) saturate(140%);
+    -webkit-backdrop-filter: blur(6px) saturate(140%);
+    background: rgba(255, 255, 255, 0.06);
   }
 
   .glass-lens *:not(.cta-button) {
